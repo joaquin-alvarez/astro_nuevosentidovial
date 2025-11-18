@@ -1,0 +1,71 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Map from '../components/Map.astro';
+import { garinData } from '../data/garin.js';
+---
+
+<Layout title="Garín - Cambios de Sentido de Calles">
+	<section>
+		<h2>Garín</h2>
+		<p>
+			El plan redefine sentidos de circulación en el área central para mejorar la conexión entre el Boulevard Presidente Perón, 
+			la Colectora Oeste y las calles más transitadas. También establece normas de estacionamiento y nueva señalización, 
+			con el objetivo de reducir los cruces conflictivos y ordenar los accesos.
+		</p>
+
+		<h3>Calles que cambian de sentido y pasan a tener sentido único:</h3>
+		<ul class="street-list">
+			<li><strong>Sarmiento:</strong> de Blvd. Pres. Perón a Colectora Oeste</li>
+			<li><strong>General Las Heras:</strong> entre Colectora Oeste y Blvd. Pres. Perón</li>
+			<li><strong>Alvear:</strong> de Lamberti a Colectora Oeste</li>
+			<li><strong>Mitre:</strong> entre Colectora Oeste y Cabo 1º Sullings</li>
+			<li><strong>Eva Perón:</strong> de 2 de Abril a Buenos Aires</li>
+			<li><strong>Roma:</strong> entre Buenos Aires y 2 de Abril</li>
+			<li><strong>Padre Perna:</strong> de 2 de Abril a Buenos Aires</li>
+			<li><strong>Cabo 1º Sullings:</strong> de 2 de Abril a Buenos Aires</li>
+			<li><strong>Cabo 1º Sullings:</strong> doble mano entre Jorge Testa y Mitre (pasa a ser doble mano)</li>
+			<li><strong>Lamberti:</strong> de Buenos Aires a 2 de Abril</li>
+			<li><strong>Inocencio Arias:</strong> entre 2 de Abril y Sarmiento</li>
+			<li><strong>Ballester:</strong> de Sarmiento a Buenos Aires</li>
+		</ul>
+
+		<h3>Mapa interactivo de cambios</h3>
+		<p>Explore el mapa interactivo para visualizar los cambios de sentido en las calles de Garín. Haga clic en las líneas para ver más detalles.</p>
+		
+		<Map 
+			id="garin-map" 
+			geojsonData={JSON.stringify(garinData)} 
+			centerLat={-34.4200} 
+			centerLng={-58.7480} 
+			zoom={15} 
+		/>
+
+		<div class="info-box">
+			<h4>Información importante</h4>
+			<p>
+				Estos cambios buscan mejorar la fluidez del tránsito y aumentar la seguridad vial en la zona céntrica de Garín.
+				Se recomienda a los conductores prestar atención a la nueva señalización instalada en las calles afectadas.
+			</p>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.info-box {
+		background-color: #e2f0fd;
+		border-left: 4px solid var(--accent);
+		padding: 1rem;
+		margin: 2rem 0;
+		border-radius: 0 0.5rem 0.5rem 0;
+	}
+
+	.info-box h4 {
+		color: var(--accent-dark);
+		margin-bottom: 0.5rem;
+	}
+
+	h3 {
+		margin-top: 1.5rem;
+		color: var(--accent-dark);
+	}
+</style>

@@ -1,0 +1,111 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Cambios en Colectoras - Cambios de Sentido de Calles">
+	<section>
+		<h2>Cambios en las Colectoras</h2>
+		<p>
+			Los cambios en las colectoras buscan mejorar la seguridad vial y la fluidez del tránsito en puntos críticos 
+			de las diferentes localidades.
+		</p>
+
+		<div class="collector-section">
+			<h3>Belén de Escobar</h3>
+			<p>
+				En Belén, la colectora Este (avenida De los Inmigrantes) mantendrá el doble sentido entre Spadaccini y Las Casuarinas, 
+				mientras que desde Las Casuarinas hasta la unión con Docente Serantes de Alvear será mano única.
+			</p>
+			<p>
+				En la colectora Oeste, el doble sentido se limitará al tramo comprendido entre Artigas y César Díaz; 
+				en ese sector pasará a tener sentido único hacia el sur.
+			</p>
+		</div>
+
+		<div class="collector-section">
+			<h3>Garín</h3>
+			<p>
+				En Garín, la colectora Oeste conservará doble sentido entre Mendoza y General Las Heras, pero será mano única 
+				desde Corrientes hasta Mendoza y desde General Las Heras hasta la avenida Belgrano.
+			</p>
+			<p>
+				Además, otras dos calles que la interceptan también cambian su sentido: Tucumán será mano única desde colectora 
+				hasta H. Yrigoyen sentido este-oeste y Corrientes único sentido de H. Yrigoyen hasta Colectora Oeste, sentido oeste-este.
+			</p>
+		</div>
+
+		<div class="info-box">
+			<h4>Objetivo de los cambios</h4>
+			<p>
+				La finalidad de estos cambios es evitar la doble circulación en las colectoras que pasan por debajo de los puentes 
+				de Inmigrantes y El Curvón, puntos de alto flujo y riesgo vial.
+			</p>
+		</div>
+
+		<div class="collector-diagram">
+			<div class="diagram-content">
+				<h4>Diagrama explicativo</h4>
+				<p>
+					Los cambios en las colectoras están diseñados para mejorar la seguridad vial en puntos críticos, 
+					especialmente en los pasos bajo puentes y en intersecciones de alto tránsito.
+				</p>
+				<p>
+					Se recomienda a los conductores prestar especial atención a la nueva señalización instalada 
+					en estos tramos para evitar confusiones y garantizar una circulación segura.
+				</p>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.collector-section {
+		margin-bottom: 2rem;
+		padding-bottom: 1rem;
+		border-bottom: 1px solid var(--bg-dark);
+	}
+
+	.collector-section:last-of-type {
+		border-bottom: none;
+	}
+
+	.info-box {
+		background-color: #e2f0fd;
+		border-left: 4px solid var(--accent);
+		padding: 1rem;
+		margin: 2rem 0;
+		border-radius: 0 0.5rem 0.5rem 0;
+	}
+
+	.info-box h4 {
+		color: var(--accent-dark);
+		margin-bottom: 0.5rem;
+	}
+
+	h3 {
+		margin-top: 1.5rem;
+		color: var(--accent-dark);
+		margin-bottom: 1rem;
+	}
+
+	.collector-diagram {
+		background-color: #f1f5f9;
+		border-radius: 0.5rem;
+		padding: 2rem;
+		margin: 2rem 0;
+		min-height: 300px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.diagram-content {
+		max-width: 600px;
+		text-align: center;
+	}
+
+	.diagram-content h4 {
+		color: var(--accent-dark);
+		margin-bottom: 1rem;
+	}
+</style>

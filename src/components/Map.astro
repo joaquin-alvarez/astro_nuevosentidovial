@@ -1,0 +1,77 @@
+---
+interface Props {
+  id: string;
+  geojsonData: string;
+  centerLat: number;
+  centerLng: number;
+  zoom: number;
+}
+
+const { id, geojsonData, centerLat, centerLng, zoom } = Astro.props;
+---
+
+<div id={id} class="map-container"></div>
+
+<script is:inline define:vars={{ id, geojsonData, centerLat, centerLng, zoom }}>
+  // Wait for the DOM to be fully loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    // Use the Leaflet library from the global scope
+    const L = window.L;
+    // Initialize the map
+    const map = L.map(id).setView([centerLat, centerLng], zoom);
+
+    // Add the OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Parse the GeoJSON data
+    const geojson = JSON.parse(geojsonData);
+
+    // Define styles for the GeoJSON features
+    const style = {
+      color: '#2563eb',
+      weight: 5,
+      opacity: 0.8,
+      lineCap: 'round',
+      lineJoin: 'round',
+      dashArray: '1, 8',
+      dashOffset: '0'
+    };
+
+    // Add the GeoJSON data to the map
+    L.geoJSON(geojson, {
+      style: style,
+      onEachFeature: function(feature, layer) {
+        if (feature.properties && feature.properties.name) {
+          const popupContent = `
+            <div class="map-popup">
+              <h4>${feature.properties.name}</h4>
+              <p>${feature.properties.description || ''}</p>
+            </div>
+          `;
+          
+          layer.bindPopup(popupContent, {
+            className: 'custom-popup',
+            maxWidth: 300,
+            autoPan: true,
+            closeButton: true
+          });
+          
+          layer.on('mouseover', function() {
+            this.setStyle({
+              color: '#1e40af',
+              weight: 6,
+              opacity: 1,
+              dashArray: '0'
+            });
+          });
+          
+          layer.on('mouseout', function() {
+            this.setStyle(style);
+          });
+        }
+      }
+    }).addTo(map);
+  });
+</script>

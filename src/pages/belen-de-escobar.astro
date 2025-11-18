@@ -1,0 +1,71 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Map from '../components/Map.astro';
+import { belenDeEscobarData } from '../data/belen-de-escobar.js';
+---
+
+<Layout title="Belén de Escobar - Cambios de Sentido de Calles">
+	<section>
+		<h2>Belén de Escobar</h2>
+		<p>
+			El nuevo esquema reorganiza el tránsito en el casco céntrico, priorizando la circulación ordenada y segura 
+			alrededor de instituciones públicas, comercios y escuelas.
+		</p>
+
+		<h3>Calles que cambian de sentido y pasan a tener sentido único:</h3>
+		<ul class="street-list">
+			<li><strong>Sarmiento:</strong> entre Av. de los Inmigrantes y Los Lazaristas</li>
+			<li><strong>Bernardo de Irigoyen:</strong> de Los lazaristas a Av. de los Inmigrantes</li>
+			<li><strong>Pellegrini:</strong> entre Estrada y César Díaz</li>
+			<li><strong>Los Lazaristas:</strong> de Sarmiento a Pellegrini</li>
+			<li><strong>Independencia:</strong> de Los Lazaristas a Av. Tapia de Cruz</li>
+			<li><strong>Independencia:</strong> de Travi a Colectora Este</li>
+			<li><strong>César Díaz:</strong> entre Colón y Moreno</li>
+			<li><strong>Belgrano:</strong> de Don Bosco a Av. 25 de Mayo</li>
+			<li><strong>San Lorenzo:</strong> entre Av. Tapia de Cruz y Don Bosco</li>
+			<li><strong>Gelves:</strong> de Libertad a Brussi</li>
+			<li><strong>General Paz:</strong> entre Brussi y Libertad</li>
+			<li><strong>Moreno:</strong> de Estrada a Av. Tapia de Cruz</li>
+			<li><strong>Belén:</strong> entre Libertad y Av. San Martín</li>
+		</ul>
+
+		<h3>Mapa interactivo de cambios</h3>
+		<p>Explore el mapa interactivo para visualizar los cambios de sentido en las calles de Belén de Escobar. Haga clic en las líneas para ver más detalles.</p>
+		
+		<Map 
+			id="belen-map" 
+			geojsonData={JSON.stringify(belenDeEscobarData)} 
+			centerLat={-34.3505} 
+			centerLng={-58.7880} 
+			zoom={15} 
+		/>
+
+		<div class="info-box">
+			<h4>Información importante</h4>
+			<p>
+				Estos cambios buscan mejorar la fluidez del tránsito y aumentar la seguridad vial en la zona céntrica de Belén de Escobar.
+				Se recomienda a los conductores prestar atención a la nueva señalización instalada en las calles afectadas.
+			</p>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.info-box {
+		background-color: #e2f0fd;
+		border-left: 4px solid var(--accent);
+		padding: 1rem;
+		margin: 2rem 0;
+		border-radius: 0 0.5rem 0.5rem 0;
+	}
+
+	.info-box h4 {
+		color: var(--accent-dark);
+		margin-bottom: 0.5rem;
+	}
+
+	h3 {
+		margin-top: 1.5rem;
+		color: var(--accent-dark);
+	}
+</style>
