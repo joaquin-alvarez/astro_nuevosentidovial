@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Map from '../components/Map.astro';
 ---
 
 <Layout title="Garín - Cambios de Sentido de Calles">
@@ -14,30 +13,111 @@ import Map from '../components/Map.astro';
 
 		<h3>Calles que cambian de sentido y pasan a tener sentido único:</h3>
 		<ul class="street-list">
-			<li><strong>Sarmiento:</strong> de Blvd. Pres. Perón a Colectora Oeste</li>
-			<li><strong>General Las Heras:</strong> entre Colectora Oeste y Blvd. Pres. Perón</li>
-			<li><strong>Alvear:</strong> de Lamberti a Colectora Oeste</li>
-			<li><strong>Mitre:</strong> entre Colectora Oeste y Cabo 1º Sullings</li>
-			<li><strong>Eva Perón:</strong> de 2 de Abril a Buenos Aires</li>
-			<li><strong>Roma:</strong> entre Buenos Aires y 2 de Abril</li>
-			<li><strong>Padre Perna:</strong> de 2 de Abril a Buenos Aires</li>
-			<li><strong>Cabo 1º Sullings:</strong> de 2 de Abril a Buenos Aires</li>
-			<li><strong>Cabo 1º Sullings:</strong> doble mano entre Jorge Testa y Mitre (pasa a ser doble mano)</li>
-			<li><strong>Lamberti:</strong> de Buenos Aires a 2 de Abril</li>
-			<li><strong>Inocencio Arias:</strong> entre 2 de Abril y Sarmiento</li>
-			<li><strong>Ballester:</strong> de Sarmiento a Buenos Aires</li>
+			<li>
+				<strong>Sarmiento</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: de Blvd. Pres. Perón a Colectora Oeste</p>
+				<p>Nueva dirección: oeste a este</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>General Las Heras</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: entre Colectora Oeste y Blvd. Pres. Perón</p>
+				<p>Nueva dirección: este a oeste</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Alvear</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: de Lamberti a Colectora Oeste</p>
+				<p>Nueva dirección: oeste a este</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Mitre</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: entre Colectora Oeste y Cabo 1º Sullings</p>
+				<p>Nueva dirección: este a oeste</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Eva Perón</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: de 2 de Abril a Buenos Aires</p>
+				<p>Nueva dirección: oeste a este</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Roma</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: entre Buenos Aires y 2 de Abril</p>
+				<p>Nueva dirección: este a oeste</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Padre Perna</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: de 2 de Abril a Buenos Aires</p>
+				<p>Nueva dirección: oeste a este</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Cabo 1º Sullings</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: de 2 de Abril a Buenos Aires</p>
+				<p>Nueva dirección: oeste a este</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Cabo 1º Sullings</strong>
+				<span class="street-category double-way">Doble sentido</span>
+				<p>Tramo: entre Jorge Testa y Mitre</p>
+				<p>Modificación: pasa a tener doble sentido de circulación</p>
+				<span class="direction-info">Doble mano</span>
+			</li>
+			<li>
+				<strong>Lamberti</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: de Buenos Aires a 2 de Abril</p>
+				<p>Nueva dirección: este a oeste</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Inocencio Arias</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: entre 2 de Abril y Sarmiento</p>
+				<p>Nueva dirección: noroeste a sureste</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Ballester</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: de Sarmiento a Buenos Aires</p>
+				<p>Nueva dirección: norte a sur</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
 		</ul>
 
-		<h3>Mapa interactivo de cambios</h3>
-		<p>Explore el mapa interactivo para visualizar los cambios de sentido en las calles de Garín. Haga clic en las líneas para ver más detalles.</p>
+		<h3>Detalles de los cambios de sentido</h3>
+		<p>A continuación se presenta información adicional sobre las zonas afectadas y objetivos de los cambios de circulación en Garín.</p>
 		
-		<Map 
-			id="garin-map" 
-			centerLat={-34.4200} 
-			centerLng={-58.7480} 
-			zoom={15}
-			locality="garin"
-		/>
+		<div class="street-changes-details">
+			<h4>Zonas de intervención</h4>
+			<ul class="area-list">
+				<li><strong>Sector céntrico:</strong> Principalmente las calles transversales entre Buenos Aires y el Blvd. Presidente Perón (Sarmiento, General Las Heras, Eva Perón, Roma, Padre Perna).</li>
+				<li><strong>Corredor de Colectora Oeste:</strong> Se modificó la circulación en las calles que conectan con la colectora (Alvear, Mitre, Cabo 1º Sullings) para organizar los flujos de entrada y salida.</li>
+				<li><strong>Corredor 2 de Abril:</strong> Calles que cruzan esta importante avenida han sido reorganizadas para mejorar la circulación.</li>
+			</ul>
+
+			<h4>Beneficios del nuevo esquema</h4>
+			<ul class="benefits-list">
+				<li><strong>Reducción de cruces conflictivos:</strong> Se eliminan puntos de cruce con alta tasa de accidentes.</li>
+				<li><strong>Mejora de la fluidez:</strong> El sistema de calles paralelas con sentidos opuestos facilita la circulación.</li>
+				<li><strong>Mayor seguridad peatonal:</strong> Las calles de sentido único permiten instalar cruces peatonales más seguros.</li>
+				<li><strong>Optimización del estacionamiento:</strong> Se reorganiza el estacionamiento permitido en diferentes calles.</li>
+			</ul>
+		</div>
 
 		<div class="info-box">
 			<h4>Información importante</h4>
@@ -50,6 +130,38 @@ import Map from '../components/Map.astro';
 </Layout>
 
 <style>
+	.street-changes-details {
+		margin: 2rem 0;
+		padding: 1.5rem;
+		border: 1px solid var(--bg-dark);
+		border-radius: var(--radius);
+		background-color: var(--bg-card);
+		box-shadow: var(--shadow);
+	}
+
+	.street-changes-details h4 {
+		color: var(--accent-dark);
+		margin-bottom: 1rem;
+		font-size: 1.15rem;
+	}
+
+	.area-list,
+	.benefits-list {
+		list-style-type: disc;
+		padding-left: 1.5rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.area-list li,
+	.benefits-list li {
+		margin-bottom: 0.75rem;
+		line-height: 1.5;
+	}
+
+	.benefits-list li strong {
+		color: var(--accent-dark);
+	}
+
 	.info-box {
 		background-color: #e2f0fd;
 		border-left: 4px solid var(--accent);
@@ -63,8 +175,9 @@ import Map from '../components/Map.astro';
 		margin-bottom: 0.5rem;
 	}
 
-	h3 {
-		margin-top: 1.5rem;
-		color: var(--accent-dark);
+	@media (max-width: 768px) {
+		.street-list {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

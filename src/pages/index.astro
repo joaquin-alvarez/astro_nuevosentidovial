@@ -9,6 +9,8 @@ import Layout from '../layouts/Layout.astro';
 			<p class="hero-text">
 				Bienvenido al sitio oficial de información sobre los cambios de sentido de calles
 				en las localidades de Belén de Escobar, Garín e Ingeniero Maschwitz.
+				<br>
+				Los cambios toman vigencia el día 2 de enero de 2026.
 			</p>
 		</div>
 	</section>
@@ -20,30 +22,38 @@ import Layout from '../layouts/Layout.astro';
 			de circulación de diversas calles en estas localidades, con el objetivo de mejorar
 			la fluidez del tránsito y aumentar la seguridad vial.
 		</p>
+		<div class="info-box">
+			<h4>Listados detallados de cambios</h4>
+			<p>
+				Para su mayor comodidad, toda la información sobre cambios de sentido se presenta en forma de listados
+				detallados, organizados por localidad y tipo de modificación. Cada cambio incluye la ubicación exacta,
+				el tramo afectado y la nueva dirección de circulación.
+			</p>
+		</div>
 
 		<div class="cards">
 			<div class="card">
 				<h3>Belén de Escobar</h3>
 				<p>El nuevo esquema reorganiza el tránsito en el casco céntrico, priorizando la circulación ordenada y segura alrededor de instituciones públicas, comercios y escuelas.</p>
-				<a href="/belen-de-escobar" class="btn">Ver detalles</a>
+				<a href={`${import.meta.env.BASE_URL}belen-de-escobar`} class="btn">Ver detalles</a>
 			</div>
 
 			<div class="card">
 				<h3>Garín</h3>
 				<p>El plan redefine sentidos de circulación en el área central para mejorar la conexión entre el Boulevard Presidente Perón, la Colectora Oeste y las calles más transitadas.</p>
-				<a href="/garin" class="btn">Ver detalles</a>
+				<a href={`${import.meta.env.BASE_URL}garin`} class="btn">Ver detalles</a>
 			</div>
 
 			<div class="card">
 				<h3>Ingeniero Maschwitz</h3>
 				<p>Las modificaciones apuntan a ordenar los ingresos y egresos del casco urbano, especialmente en zonas escolares y de alto tránsito.</p>
-				<a href="/ingeniero-maschwitz" class="btn">Ver detalles</a>
+				<a href={`${import.meta.env.BASE_URL}ingeniero-maschwitz`} class="btn">Ver detalles</a>
 			</div>
 
 			<div class="card">
 				<h3>Cambios en Colectoras</h3>
 				<p>Información sobre los cambios en las colectoras de las diferentes localidades para evitar la doble circulación en puntos de alto flujo y riesgo vial.</p>
-				<a href="/colectoras" class="btn">Ver detalles</a>
+				<a href={`${import.meta.env.BASE_URL}colectoras`} class="btn">Ver detalles</a>
 			</div>
 		</div>
 	</section>
@@ -57,18 +67,48 @@ import Layout from '../layouts/Layout.astro';
 		margin-bottom: 3rem;
 		border-radius: var(--radius);
 		text-align: center;
+		position: relative;
+		overflow: hidden;
+		box-shadow: var(--shadow);
+	}
+
+	.hero::before {
+		content: '';
+		position: absolute;
+		top: -50%;
+		left: -50%;
+		width: 200%;
+		height: 200%;
+		background: repeating-linear-gradient(
+			45deg,
+			rgba(255, 255, 255, 0.05),
+			rgba(255, 255, 255, 0.05) 10px,
+			transparent 10px,
+			transparent 20px
+		);
+		animation: heroPattern 30s linear infinite;
+		z-index: 1;
+		opacity: 0.3;
+	}
+
+	@keyframes heroPattern {
+		0% { transform: rotate(0); }
+		100% { transform: rotate(360deg); }
 	}
 
 	.hero-content {
 		max-width: 800px;
 		margin: 0 auto;
 		padding: 0 1.5rem;
+		position: relative;
+		z-index: 2;
 	}
 
 	.hero h2 {
-		font-size: 2.5rem;
+		font-size: 2.75rem;
 		margin-bottom: 1.5rem;
 		color: white;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 	}
 
 	.hero h2::after {
@@ -77,23 +117,30 @@ import Layout from '../layouts/Layout.astro';
 		bottom: -0.5rem;
 		left: 50%;
 		transform: translateX(-50%);
-		width: 80px;
+		width: 100px;
 		height: 4px;
-		background-color: white;
+		background: linear-gradient(90deg, var(--secondary), rgba(255, 255, 255, 0.8));
 		border-radius: 2px;
+		opacity: 0.8;
 	}
 
 	.hero-text {
 		font-size: 1.25rem;
-		max-width: 600px;
+		max-width: 650px;
 		margin: 0 auto;
-		line-height: 1.6;
+		line-height: 1.7;
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+		color: rgba(255, 255, 255, 0.95);
 	}
 
 	.section-title {
 		text-align: center;
-		margin-bottom: 2rem;
-		font-size: 1.75rem;
+		margin-bottom: 2.5rem;
+		font-size: 1.85rem;
+		position: relative;
+		display: inline-block;
+		left: 50%;
+		transform: translateX(-50%);
 	}
 
 	.cards {
@@ -113,20 +160,51 @@ import Layout from '../layouts/Layout.astro';
 		height: 100%;
 		display: flex;
 		flex-direction: column;
+		position: relative;
+		overflow: hidden;
 	}
 
 	.card:hover {
 		transform: translateY(-5px);
-		box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+		box-shadow: var(--shadow-hover);
+	}
+
+	.card:nth-child(2) {
+		border-top-color: var(--secondary);
+	}
+
+	.card:nth-child(3) {
+		border-top-color: #27ae60;
+	}
+
+	.card:nth-child(4) {
+		border-top-color: #8e44ad;
+	}
+
+	.card::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 100px;
+		height: 100px;
+		background: linear-gradient(135deg, transparent 50%, rgba(var(--accent-rgb), 0.03) 50%);
+		border-radius: 0 0 0 100px;
+	}
+
+	.card:nth-child(2)::before {
+		background: linear-gradient(135deg, transparent 50%, rgba(var(--secondary-rgb), 0.03) 50%);
 	}
 
 	.card h3 {
+		font-family: 'Outfit', sans-serif;
 		color: var(--accent-dark);
-		margin-bottom: 1rem;
-		font-size: 1.35rem;
+		margin-bottom: 1.25rem;
+		font-size: 1.45rem;
 		position: relative;
 		display: inline-block;
-		padding-bottom: 0.5rem;
+		padding-bottom: 0.75rem;
+		letter-spacing: -0.01em;
 	}
 
 	.card h3::after {
@@ -134,47 +212,111 @@ import Layout from '../layouts/Layout.astro';
 		position: absolute;
 		bottom: 0;
 		left: 0;
-		width: 40px;
+		width: 50px;
 		height: 3px;
-		background-color: var(--accent);
+		background: linear-gradient(90deg, var(--accent), var(--accent-light));
 		border-radius: 1.5px;
+		opacity: 0.8;
+	}
+
+	.card:nth-child(2) h3::after {
+		background: linear-gradient(90deg, var(--secondary), var(--secondary-light));
+	}
+
+	.card:nth-child(3) h3::after {
+		background: linear-gradient(90deg, #27ae60, #2ecc71);
+	}
+
+	.card:nth-child(4) h3::after {
+		background: linear-gradient(90deg, #8e44ad, #9b59b6);
 	}
 
 	.card p {
 		flex-grow: 1;
 		margin-bottom: 1.5rem;
+		line-height: 1.75;
 	}
 
 	.btn {
 		display: inline-block;
-		background-color: var(--secondary);
+		background-color: var(--accent);
 		color: white;
-		padding: 0.75rem 1.25rem;
-		border-radius: var(--radius);
+		padding: 0.75rem 1.5rem;
+		border-radius: 30px;
 		text-decoration: none;
 		font-weight: 500;
 		transition: var(--transition);
 		text-align: center;
-		box-shadow: 0 2px 4px rgba(245, 166, 35, 0.3);
+		box-shadow: 0 4px 10px rgba(30, 136, 229, 0.2);
+		position: relative;
+	}
+
+	.card:nth-child(2) .btn {
+		background-color: var(--secondary);
+		box-shadow: 0 4px 10px rgba(255, 138, 101, 0.2);
+	}
+
+	.card:nth-child(3) .btn {
+		background-color: #27ae60;
+		box-shadow: 0 4px 10px rgba(39, 174, 96, 0.2);
+	}
+
+	.card:nth-child(4) .btn {
+		background-color: #8e44ad;
+		box-shadow: 0 4px 10px rgba(142, 68, 173, 0.2);
 	}
 
 	.btn:hover {
-		background-color: var(--secondary-dark);
 		transform: translateY(-2px);
-		box-shadow: 0 4px 8px rgba(245, 166, 35, 0.4);
+		box-shadow: 0 6px 12px rgba(30, 136, 229, 0.25);
+	}
+
+	.card:nth-child(2) .btn:hover {
+		box-shadow: 0 6px 12px rgba(255, 138, 101, 0.25);
+	}
+
+	.card:nth-child(3) .btn:hover {
+		box-shadow: 0 6px 12px rgba(39, 174, 96, 0.25);
+	}
+
+	.card:nth-child(4) .btn:hover {
+		box-shadow: 0 6px 12px rgba(142, 68, 173, 0.25);
+	}
+
+	.btn::after {
+		content: '→';
+		margin-left: 0.5rem;
+		transition: var(--transition);
+		opacity: 0;
+		transform: translateX(-5px);
+		display: inline-block;
+	}
+
+	.btn:hover::after {
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	:root {
+		--accent-rgb: 30, 136, 229;
+		--secondary-rgb: 255, 138, 101;
 	}
 
 	@media (max-width: 768px) {
 		.hero {
-			padding: 3rem 0;
+			padding: 3.5rem 0;
 		}
 
 		.hero h2 {
-			font-size: 2rem;
+			font-size: 2.2rem;
 		}
 
 		.hero-text {
-			font-size: 1.1rem;
+			font-size: 1.15rem;
+		}
+
+		.cards {
+			gap: 1.5rem;
 		}
 	}
 </style>

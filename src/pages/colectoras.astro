@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Map from '../components/Map.astro';
 ---
 
 <Layout title="Cambios en Colectoras - Cambios de Sentido de Calles">
@@ -43,25 +42,82 @@ import Map from '../components/Map.astro';
 			</p>
 		</div>
 
-		<h3>Mapas interactivos de cambios en colectoras</h3>
-		
+		<h3>Detalle de cambios en colectoras</h3>
+
 		<h4>Colectoras en Belén de Escobar</h4>
-		<Map 
-			id="belen-colectoras-map" 
-			centerLat={-34.3485} 
-			centerLng={-58.7850} 
-			zoom={14}
-			locality="belen-de-escobar"
-		/>
+		<div class="street-changes-details">
+			<ul class="street-list">
+				<li>
+					<strong>Colectora Este (Av. De los Inmigrantes)</strong>
+					<span class="street-category double-way">Doble sentido</span>
+					<p>Tramo: entre Spadaccini y Las Casuarinas</p>
+					<p>Se mantiene: Doble sentido de circulación</p>
+					<span class="direction-info">Doble mano</span>
+				</li>
+				<li>
+					<strong>Colectora Este (Av. De los Inmigrantes)</strong>
+					<span class="street-category collector-change">Cambio en colectora</span>
+					<p>Tramo: desde Las Casuarinas hasta Docente Serantes de Alvear</p>
+					<p>Nueva dirección: norte a sur</p>
+					<span class="direction-info">Sentido único</span>
+				</li>
+				<li>
+					<strong>Colectora Oeste</strong>
+					<span class="street-category double-way">Doble sentido</span>
+					<p>Tramo: entre Artigas y César Díaz</p>
+					<p>Se mantiene: Doble sentido de circulación</p>
+					<span class="direction-info">Doble mano</span>
+				</li>
+				<li>
+					<strong>Colectora Oeste</strong>
+					<span class="street-category collector-change">Cambio en colectora</span>
+					<p>Tramo: después de César Díaz</p>
+					<p>Nueva dirección: norte a sur</p>
+					<span class="direction-info">Sentido único</span>
+				</li>
+			</ul>
+		</div>
 		
 		<h4>Colectoras en Garín</h4>
-		<Map 
-			id="garin-colectoras-map" 
-			centerLat={-34.4200} 
-			centerLng={-58.7450} 
-			zoom={14}
-			locality="garin"
-		/>
+		<div class="street-changes-details">
+			<ul class="street-list">
+				<li>
+					<strong>Colectora Oeste (Garín)</strong>
+					<span class="street-category double-way">Doble sentido</span>
+					<p>Tramo: entre Mendoza y General Las Heras</p>
+					<p>Se mantiene: Doble sentido de circulación</p>
+					<span class="direction-info">Doble mano</span>
+				</li>
+				<li>
+					<strong>Colectora Oeste (Garín)</strong>
+					<span class="street-category collector-change">Cambio en colectora</span>
+					<p>Tramo: desde Corrientes hasta Mendoza</p>
+					<p>Nueva dirección: norte a sur</p>
+					<span class="direction-info">Sentido único</span>
+				</li>
+				<li>
+					<strong>Colectora Oeste (Garín)</strong>
+					<span class="street-category collector-change">Cambio en colectora</span>
+					<p>Tramo: desde General Las Heras hasta la avenida Belgrano</p>
+					<p>Nueva dirección: norte a sur</p>
+					<span class="direction-info">Sentido único</span>
+				</li>
+				<li>
+					<strong>Tucumán</strong>
+					<span class="street-category street-change">Cambio de sentido</span>
+					<p>Tramo: desde colectora hasta H. Yrigoyen</p>
+					<p>Nueva dirección: este a oeste</p>
+					<span class="direction-info">Sentido único</span>
+				</li>
+				<li>
+					<strong>Corrientes</strong>
+					<span class="street-category street-change">Cambio de sentido</span>
+					<p>Tramo: de H. Yrigoyen hasta Colectora Oeste</p>
+					<p>Nueva dirección: oeste a este</p>
+					<span class="direction-info">Sentido único</span>
+				</li>
+			</ul>
+		</div>
 		
 		<div class="info-note">
 			<p>
@@ -115,24 +171,13 @@ import Map from '../components/Map.astro';
 		margin-bottom: 1rem;
 	}
 
-	.collector-diagram {
-		background-color: #f1f5f9;
-		border-radius: 0.5rem;
-		padding: 2rem;
-		margin: 2rem 0;
-		min-height: 300px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+	.street-changes-details {
+		margin: 1.5rem 0 2.5rem;
 	}
 
-	.diagram-content {
-		max-width: 600px;
-		text-align: center;
-	}
-
-	.diagram-content h4 {
-		color: var(--accent-dark);
-		margin-bottom: 1rem;
+	@media (max-width: 768px) {
+		.street-list {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

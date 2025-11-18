@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Map from '../components/Map.astro';
 ---
 
 <Layout title="Belén de Escobar - Cambios de Sentido de Calles">
@@ -13,31 +12,120 @@ import Map from '../components/Map.astro';
 
 		<h3>Calles que cambian de sentido y pasan a tener sentido único:</h3>
 		<ul class="street-list">
-			<li><strong>Sarmiento:</strong> entre Av. de los Inmigrantes y Los Lazaristas</li>
-			<li><strong>Bernardo de Irigoyen:</strong> de Los lazaristas a Av. de los Inmigrantes</li>
-			<li><strong>Pellegrini:</strong> entre Estrada y César Díaz</li>
-			<li><strong>Los Lazaristas:</strong> de Sarmiento a Pellegrini</li>
-			<li><strong>Independencia:</strong> de Los Lazaristas a Av. Tapia de Cruz</li>
-			<li><strong>Independencia:</strong> de Travi a Colectora Este</li>
-			<li><strong>César Díaz:</strong> entre Colón y Moreno</li>
-			<li><strong>Belgrano:</strong> de Don Bosco a Av. 25 de Mayo</li>
-			<li><strong>San Lorenzo:</strong> entre Av. Tapia de Cruz y Don Bosco</li>
-			<li><strong>Gelves:</strong> de Libertad a Brussi</li>
-			<li><strong>General Paz:</strong> entre Brussi y Libertad</li>
-			<li><strong>Moreno:</strong> de Estrada a Av. Tapia de Cruz</li>
-			<li><strong>Belén:</strong> entre Libertad y Av. San Martín</li>
+			<li>
+				<strong>Sarmiento</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: entre Av. de los Inmigrantes y Los Lazaristas</p>
+				<p>Nueva dirección: oeste a este</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Bernardo de Irigoyen</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: de Los Lazaristas a Av. de los Inmigrantes</p>
+				<p>Nueva dirección: este a oeste</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Pellegrini</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: entre Estrada y César Díaz</p>
+				<p>Nueva dirección: oeste a este</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Los Lazaristas</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: de Sarmiento a Pellegrini</p>
+				<p>Nueva dirección: norte a sur</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Independencia</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: de Los Lazaristas a Av. Tapia de Cruz</p>
+				<p>Nueva dirección: oeste a este</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Independencia</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: de Travi a Colectora Este</p>
+				<p>Nueva dirección: oeste a este</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>César Díaz</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: entre Colón y Moreno</p>
+				<p>Nueva dirección: norte a sur</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Belgrano</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: de Don Bosco a Av. 25 de Mayo</p>
+				<p>Nueva dirección: oeste a este</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>San Lorenzo</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: entre Av. Tapia de Cruz y Don Bosco</p>
+				<p>Nueva dirección: oeste a este</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Gelves</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: de Libertad a Brussi</p>
+				<p>Nueva dirección: oeste a este</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>General Paz</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: entre Brussi y Libertad</p>
+				<p>Nueva dirección: este a oeste</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Moreno</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: de Estrada a Av. Tapia de Cruz</p>
+				<p>Nueva dirección: oeste a este</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
+			<li>
+				<strong>Belén</strong>
+				<span class="street-category street-change">Cambio de sentido</span>
+				<p>Tramo: entre Libertad y Av. San Martín</p>
+				<p>Nueva dirección: oeste a este</p>
+				<span class="direction-info">Sentido único</span>
+			</li>
 		</ul>
 
-		<h3>Mapa interactivo de cambios</h3>
-		<p>Explore el mapa interactivo para visualizar los cambios de sentido en las calles de Belén de Escobar. Haga clic en las líneas para ver más detalles.</p>
+		<h3>Detalles de los cambios de sentido</h3>
+		<p>A continuación, se presenta una lista detallada de todas las calles que han cambiado de sentido en Belén de Escobar. La información incluye la ubicación exacta y la descripción del cambio.</p>
 		
-		<Map 
-			id="belen-map" 
-			centerLat={-34.3505} 
-			centerLng={-58.7880} 
-			zoom={15}
-			locality="belen-de-escobar"
-		/>
+		<div class="street-changes-details">
+			<h4>Principales zonas afectadas</h4>
+			<ul class="area-list">
+				<li><strong>Zona céntrica:</strong> Las calles alrededor de la plaza principal y el área comercial. Se incluyen las calles Sarmiento, Bernardo de Irigoyen, Belgrano y San Lorenzo que forman parte del circuito principal alrededor de la Plaza Central.</li>
+				<li><strong>Zona escolar:</strong> Calles cercanas a instituciones educativas para mejorar la seguridad. Principalmente Pellegrini y Los Lazaristas que pasan cerca de escuelas primarias y secundarias.</li>
+				<li><strong>Zona comercial:</strong> Área de alto tránsito alrededor de los principales comercios, incluyendo las calles Moreno, Independencia y César Díaz que concentran locales comerciales.</li>
+				<li><strong>Accesos a barrios:</strong> Se modificaron los sentidos de las calles Gelves, General Paz y Belén para ordenar los accesos a barrios residenciales.</li>
+			</ul>
+
+			<h4>Señalización implementada</h4>
+			<p>En todas las calles mencionadas se ha implementado nueva señalización que incluye:</p>
+			<ul class="signage-list">
+				<li>Carteles indicadores de sentido único</li>
+				<li>Señalización horizontal con flechas direccionales</li>
+				<li>Carteles de prohibido el paso en contramano</li>
+				<li>Semáforos reorientados según los nuevos sentidos</li>
+			</ul>
+		</div>
 
 		<div class="info-box">
 			<h4>Información importante</h4>
@@ -50,21 +138,119 @@ import Map from '../components/Map.astro';
 </Layout>
 
 <style>
+	.street-changes-details {
+		margin: 2.5rem 0;
+		padding: 1.75rem;
+		border: 1px solid rgba(30, 136, 229, 0.12);
+		border-radius: var(--radius);
+		background-color: rgba(255, 255, 255, 0.8);
+		box-shadow: var(--shadow);
+		position: relative;
+	}
+
+	.street-changes-details::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 5px;
+		background: linear-gradient(90deg, var(--accent), var(--accent-light));
+		border-radius: var(--radius) var(--radius) 0 0;
+		opacity: 0.7;
+	}
+
+	.street-changes-details h4 {
+		font-family: 'Outfit', sans-serif;
+		color: var(--accent-dark);
+		margin-bottom: 1.25rem;
+		font-size: 1.2rem;
+		letter-spacing: -0.01em;
+		position: relative;
+		display: inline-block;
+	}
+
+	.street-changes-details h4::after {
+		content: '';
+		position: absolute;
+		bottom: -5px;
+		left: 0;
+		width: 40px;
+		height: 3px;
+		background-color: var(--accent-light);
+		border-radius: 2px;
+	}
+
+	.area-list,
+	.signage-list {
+		list-style-type: disc;
+		padding-left: 1.5rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.area-list li,
+	.signage-list li {
+		margin-bottom: 0.85rem;
+		line-height: 1.6;
+	}
+
+	.area-list li strong,
+	.signage-list li strong {
+		color: var(--accent-dark);
+		font-weight: 600;
+	}
+
 	.info-box {
-		background-color: #e2f0fd;
+		background-color: rgba(30, 136, 229, 0.08);
 		border-left: 4px solid var(--accent);
-		padding: 1rem;
-		margin: 2rem 0;
-		border-radius: 0 0.5rem 0.5rem 0;
+		padding: 1.5rem;
+		margin: 2.25rem 0;
+		border-radius: 0 var(--radius) var(--radius) 0;
+		box-shadow: var(--shadow);
+		position: relative;
+	}
+
+	.info-box::before {
+		content: '💡';
+		position: absolute;
+		top: -12px;
+		left: -12px;
+		background: var(--accent);
+		color: white;
+		width: 28px;
+		height: 28px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 16px;
 	}
 
 	.info-box h4 {
+		font-family: 'Outfit', sans-serif;
 		color: var(--accent-dark);
-		margin-bottom: 0.5rem;
+		margin-bottom: 0.75rem;
+		font-weight: 600;
 	}
 
-	h3 {
-		margin-top: 1.5rem;
-		color: var(--accent-dark);
+	h2 {
+		margin-bottom: 1.5rem;
+	}
+
+	h2 + p {
+		font-size: 1.1rem;
+		line-height: 1.7;
+		color: var(--text-light);
+		max-width: 700px;
+	}
+
+	.street-list {
+		margin-top: 2rem;
+	}
+
+	@media (max-width: 768px) {
+		.street-list {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>
