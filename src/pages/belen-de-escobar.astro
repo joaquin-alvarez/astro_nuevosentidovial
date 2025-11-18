@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Map from '../components/Map.astro';
-import { belenDeEscobarData } from '../data/belen-de-escobar.js';
 ---
 
 <Layout title="Belén de Escobar - Cambios de Sentido de Calles">
@@ -34,10 +33,10 @@ import { belenDeEscobarData } from '../data/belen-de-escobar.js';
 		
 		<Map 
 			id="belen-map" 
-			geojsonData={JSON.stringify(belenDeEscobarData)} 
 			centerLat={-34.3505} 
 			centerLng={-58.7880} 
-			zoom={15} 
+			zoom={15}
+			locality="belen-de-escobar"
 		/>
 
 		<div class="info-box">

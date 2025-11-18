@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Map from '../components/Map.astro';
 ---
 
 <Layout title="Ingeniero Maschwitz - Cambios de Sentido de Calles">
@@ -21,18 +22,27 @@ import Layout from '../layouts/Layout.astro';
 			para mejorar la circulación hacia y desde la estación.
 		</p>
 
-		<div class="map-placeholder">
-			<div class="map-info">
-				<h4>Información sobre los cambios</h4>
-				<p>
-					El cambio de sentido en la calle La Plata busca mejorar la circulación en una zona de alto tránsito, 
-					especialmente en horarios escolares y laborales.
-				</p>
-				<p>
-					La prohibición de estacionamiento en la calle Villanueva permitirá un mejor flujo vehicular en una 
-					zona crítica cercana a la estación.
-				</p>
-			</div>
+		<h3>Mapa interactivo de cambios</h3>
+		<p>Explore el mapa interactivo para visualizar los cambios en Ingeniero Maschwitz. Haga clic en las líneas para ver más detalles.</p>
+		
+		<Map 
+			id="maschwitz-map" 
+			centerLat={-34.3800} 
+			centerLng={-58.7290} 
+			zoom={15}
+			locality="ingeniero-maschwitz"
+		/>
+		
+		<div class="map-info">
+			<h4>Información sobre los cambios</h4>
+			<p>
+				El cambio de sentido en la calle La Plata busca mejorar la circulación en una zona de alto tránsito, 
+				especialmente en horarios escolares y laborales.
+			</p>
+			<p>
+				La prohibición de estacionamiento en la calle Villanueva permitirá un mejor flujo vehicular en una 
+				zona crítica cercana a la estación.
+			</p>
 		</div>
 
 		<div class="info-box">

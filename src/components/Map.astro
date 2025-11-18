@@ -1,20 +1,224 @@
 ---
 interface Props {
   id: string;
-  geojsonData: string;
   centerLat: number;
   centerLng: number;
   zoom: number;
+  locality: string;
 }
 
-const { id, geojsonData, centerLat, centerLng, zoom } = Astro.props;
+const { id, centerLat, centerLng, zoom, locality } = Astro.props;
+
+// We'll fetch the GeoJSON data in the client-side script
+// For now, create empty array for server-side rendering
+const localityFeatures: any[] = [];
+
+// Map category names to display names
+const categoryNames = {
+  'street-change': 'Cambio de sentido',
+  'double-way': 'Doble sentido',
+  'collector-change': 'Cambio en colectora',
+  'no-parking': 'Prohibido estacionar'
+};
 ---
 
-<div id={id} class="map-container"></div>
+<div class="map-with-list">
+  <button class="toggle-list-mobile" aria-label="Toggle changes list" title="Mostrar/ocultar lista de cambios">
+    <span class="list-icon">📋</span>
+  </button>
+  
+  <div class="changes-panel">
+    <div class="changes-header">
+      <h4>Lista de Cambios</h4>
+      <button class="close-list" aria-label="Close list" title="Cerrar lista">
+        <span class="close-icon">✕</span>
+      </button>
+    </div>
+    <div class="changes-list">
+      <div class="loading-placeholder">
+        <p>Cargando cambios...</p>
+      </div>
+    </div>
+  </div>
+  
+  <div id={id} class="map-container"></div>
+</div>
 
-<script is:inline define:vars={{ id, geojsonData, centerLat, centerLng, zoom }}>
+<style>
+  .map-with-list {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 1.5rem;
+    position: relative;
+  }
+  
+  .changes-panel {
+    background-color: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1rem;
+    max-height: 500px;
+    overflow-y: auto;
+    position: relative;
+  }
+  
+  .toggle-list-mobile {
+    display: none;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 999;
+    background-color: white;
+    border: none;
+    box-shadow: var(--shadow);
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
+  
+  .changes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--bg-dark);
+  }
+  
+  .changes-panel h4 {
+    margin: 0;
+    color: var(--accent-dark);
+    font-size: 1.1rem;
+  }
+  
+  .close-list {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.25rem;
+    border-radius: 50%;
+    color: var(--accent-dark);
+    display: none;
+  }
+  
+  .changes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .change-item {
+    padding: 0.75rem;
+    border: 1px solid var(--bg-dark);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: var(--bg);
+  }
+  
+  .change-item:hover {
+    border-color: var(--accent);
+    background-color: var(--bg-card);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  
+  .change-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .change-header h5 {
+    margin: 0;
+    color: var(--accent-dark);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  
+  .change-type {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    color: white;
+    font-weight: 500;
+    text-align: center;
+    width: fit-content;
+  }
+  
+  .change-type.street-change {
+    background-color: #4BC0C8;
+  }
+  
+  .change-type.double-way {
+    background-color: #27ae60;
+  }
+  
+  .change-type.collector-change {
+    background-color: #8e44ad;
+  }
+  
+  .change-type.no-parking {
+    background-color: #e74c3c;
+  }
+  
+  .change-description {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    line-height: 1.4;
+  }
+  
+  .loading-placeholder {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-light);
+    font-style: italic;
+  }
+  
+  @media (max-width: 768px) {
+    .map-with-list {
+      grid-template-columns: 1fr;
+      position: relative;
+    }
+    
+    .changes-panel {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      width: calc(100% - 20px);
+      max-width: 300px;
+      max-height: 80vh;
+      z-index: 1000;
+      transform: translateX(-110%);
+      transition: transform 0.3s ease;
+    }
+    
+    .changes-panel.active {
+      transform: translateX(0);
+    }
+    
+    .toggle-list-mobile {
+      display: block;
+    }
+    
+    .close-list {
+      display: block;
+    }
+    
+    .map-container {
+      position: relative;
+    }
+  }
+</style>
+
+<script is:inline define:vars={{ id, centerLat, centerLng, zoom, locality }}>
   // Wait for the DOM to be fully loaded
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     // Use the Leaflet library from the global scope
     const L = window.L;
     // Initialize the map
@@ -25,53 +229,261 @@ const { id, geojsonData, centerLat, centerLng, zoom } = Astro.props;
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Parse the GeoJSON data
-    const geojson = JSON.parse(geojsonData);
-
-    // Define styles for the GeoJSON features
-    const style = {
-      color: '#2563eb',
-      weight: 5,
-      opacity: 0.8,
-      lineCap: 'round',
-      lineJoin: 'round',
-      dashArray: '1, 8',
-      dashOffset: '0'
+    // Fetch the GeoJSON data
+    let allData;
+    try {
+      const response = await fetch('/data/street-changes.geojson');
+      allData = await response.json();
+    } catch (error) {
+      console.error('Error loading GeoJSON data:', error);
+      return;
+    }
+    
+    // Filter data for this locality
+    const localityData = {
+      type: "FeatureCollection",
+      features: allData.features.filter(f => f.properties.locality === locality)
     };
 
-    // Add the GeoJSON data to the map
-    L.geoJSON(geojson, {
-      style: style,
-      onEachFeature: function(feature, layer) {
-        if (feature.properties && feature.properties.name) {
-          const popupContent = `
-            <div class="map-popup">
-              <h4>${feature.properties.name}</h4>
-              <p>${feature.properties.description || ''}</p>
-            </div>
-          `;
-          
-          layer.bindPopup(popupContent, {
-            className: 'custom-popup',
-            maxWidth: 300,
-            autoPan: true,
-            closeButton: true
-          });
-          
-          layer.on('mouseover', function() {
-            this.setStyle({
-              color: '#1e40af',
-              weight: 6,
-              opacity: 1,
-              dashArray: '0'
+    // Define styles based on category
+    const getStyle = (feature) => {
+      const category = feature.properties.category;
+      
+      const baseStyle = {
+        weight: 5,
+        opacity: 0.8,
+        lineCap: 'round',
+        lineJoin: 'round'
+      };
+      
+      switch(category) {
+        case 'street-change':
+          return {
+            ...baseStyle,
+            color: '#4BC0C8', // turquoise
+          };
+        case 'double-way':
+          return {
+            ...baseStyle,
+            color: '#27ae60', // green
+          };
+        case 'collector-change':
+          return {
+            ...baseStyle,
+            color: '#8e44ad', // purple
+          };
+        case 'no-parking':
+          return {
+            ...baseStyle,
+            color: '#e74c3c', // red
+            dashArray: '10, 5'
+          };
+        default:
+          return {
+            ...baseStyle,
+            color: '#4BC0C8',
+          };
+      }
+    };
+
+    // Create a layer group to hold all GeoJSON layers
+    const layerGroup = L.layerGroup().addTo(map);
+    const layers = [];
+    
+    // Function to populate the changes list
+    const populateChangesList = () => {
+      const changesListContainer = document.querySelector('.changes-list');
+      const categoryNames = {
+        'street-change': 'Cambio de sentido',
+        'double-way': 'Doble sentido',
+        'collector-change': 'Cambio en colectora',
+        'no-parking': 'Prohibido estacionar'
+      };
+      
+      changesListContainer.innerHTML = '';
+      
+      localityData.features.forEach((feature, index) => {
+        const changeItem = document.createElement('div');
+        changeItem.className = 'change-item';
+        changeItem.setAttribute('data-feature-index', index);
+        
+        changeItem.innerHTML = `
+          <div class="change-header">
+            <h5>${feature.properties.name}</h5>
+            <span class="change-type ${feature.properties.category}">
+              ${categoryNames[feature.properties.category] || feature.properties.category}
+            </span>
+          </div>
+          <p class="change-description">${feature.properties.description}</p>
+        `;
+        
+        changesListContainer.appendChild(changeItem);
+      });
+    };
+    
+    // Function to create arrow decorator for lines
+    const createArrowDecorator = (path, color) => {
+      return L.polylineDecorator(path, {
+        patterns: [
+          {
+            offset: '70%',
+            repeat: 0,
+            symbol: L.Symbol.arrowHead({
+              pixelSize: 12,
+              polygon: false,
+              pathOptions: { 
+                stroke: true, 
+                weight: 2, 
+                color: color,
+                fillOpacity: 1
+              }
+            })
+          }
+        ]
+      });
+    };
+    
+    // Function to render all features
+    const renderFeatures = () => {
+      // Clear existing layers
+      layerGroup.clearLayers();
+      layers.length = 0;
+      
+      // Add all features to map
+      localityData.features.forEach((feature, index) => {
+        const style = getStyle(feature);
+        
+        const layer = L.geoJSON(feature, {
+          style: style,
+          onEachFeature: function(feature, layer) {
+            if (feature.properties && feature.properties.name) {
+              const categoryName = {
+                'street-change': 'Cambio de sentido',
+                'double-way': 'Doble sentido',
+                'collector-change': 'Cambio en colectora',
+                'no-parking': 'Prohibido estacionar'
+              }[feature.properties.category] || feature.properties.category;
+              
+              const popupContent = `
+                <div class="map-popup">
+                  <h4>${feature.properties.name}</h4>
+                  <p>${feature.properties.description || ''}</p>
+                  <p class="category-tag">${categoryName}</p>
+                </div>
+              `;
+              
+              layer.bindPopup(popupContent, {
+                className: 'custom-popup',
+                maxWidth: 300,
+                autoPan: true,
+                closeButton: true
+              });
+              
+              layer.on('mouseover', function() {
+                this.setStyle({
+                  ...style,
+                  weight: 7,
+                  opacity: 1
+                });
+              });
+              
+              layer.on('mouseout', function() {
+                this.setStyle(style);
+              });
+            }
+          }
+        }).addTo(layerGroup);
+        
+        // Add arrow decorator for direction changes
+        if (feature.properties.category === 'street-change' || feature.properties.category === 'collector-change') {
+          // Get the coordinates from the feature
+          if (feature.geometry.type === 'LineString') {
+            const latlngs = feature.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+            const polyline = L.polyline(latlngs, {opacity: 0}); // Invisible polyline for arrows
+            const decorator = createArrowDecorator(polyline, style.color);
+            decorator.addTo(layerGroup);
+          }
+        }
+        
+        layers.push({ layer, feature, index });
+      });
+    };
+    
+    // Function to zoom to specific feature
+    const zoomToFeature = (featureIndex) => {
+      const feature = localityData.features[featureIndex];
+      if (feature && feature.geometry.type === 'LineString') {
+        const coordinates = feature.geometry.coordinates;
+        const latlngs = coordinates.map(coord => [coord[1], coord[0]]);
+        
+        // Create bounds and fit the map
+        const group = L.featureGroup([L.polyline(latlngs)]);
+        map.fitBounds(group.getBounds(), { padding: [50, 50] });
+        
+        // Find and open popup after a short delay
+        setTimeout(() => {
+          const targetLayer = layers.find(l => l.index === featureIndex);
+          if (targetLayer && targetLayer.layer) {
+            // Get the first layer from the geoJSON layer group
+            targetLayer.layer.eachLayer((sublayer) => {
+              if (sublayer.getPopup) {
+                sublayer.openPopup();
+              }
             });
-          });
-          
-          layer.on('mouseout', function() {
-            this.setStyle(style);
-          });
+          }
+        }, 500);
+      }
+    };
+    
+    // Set up event listeners for the changes list using delegation
+    const changesList = document.querySelector('.changes-list');
+    changesList.addEventListener('click', (e) => {
+      const changeItem = e.target.closest('.change-item');
+      if (changeItem) {
+        const featureIndex = parseInt(changeItem.getAttribute('data-feature-index'));
+        zoomToFeature(featureIndex);
+        
+        // Close panel on mobile after clicking an item
+        const changesPanel = document.querySelector('.changes-panel');
+        if (window.innerWidth <= 768 && changesPanel) {
+          changesPanel.classList.remove('active');
         }
       }
-    }).addTo(map);
+    });
+    
+    // Handle mobile toggle for changes list
+    const toggleButton = document.querySelector('.toggle-list-mobile');
+    const closeButton = document.querySelector('.close-list');
+    const changesPanel = document.querySelector('.changes-panel');
+    
+    if (toggleButton && changesPanel) {
+      toggleButton.addEventListener('click', () => {
+        changesPanel.classList.add('active');
+      });
+    }
+    
+    if (closeButton && changesPanel) {
+      closeButton.addEventListener('click', () => {
+        changesPanel.classList.remove('active');
+      });
+    }
+    
+    // Close panel when clicking on map on mobile
+    map.on('click', () => {
+      if (window.innerWidth <= 768 && changesPanel && changesPanel.classList.contains('active')) {
+        changesPanel.classList.remove('active');
+      }
+    });
+    
+    // Close panel when pressing escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && changesPanel && changesPanel.classList.contains('active')) {
+        changesPanel.classList.remove('active');
+      }
+    });
+    
+    // Initial setup - populate list and render features
+    populateChangesList();
+    renderFeatures();
   });
 </script>

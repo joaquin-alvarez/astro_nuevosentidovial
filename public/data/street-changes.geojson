@@ -1,0 +1,581 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sarmiento",
+        "description": "Entre Av. de los Inmigrantes y Los Lazaristas",
+        "locality": "belen-de-escobar",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7923, -34.3485],
+          [-58.7880, -34.3485]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bernardo de Irigoyen",
+        "description": "De Los lazaristas a Av. de los Inmigrantes",
+        "locality": "belen-de-escobar",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7880, -34.3505],
+          [-58.7923, -34.3505]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pellegrini",
+        "description": "Entre Estrada y César Díaz",
+        "locality": "belen-de-escobar",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7910, -34.3525],
+          [-58.7890, -34.3525]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Los Lazaristas",
+        "description": "De Sarmiento a Pellegrini",
+        "locality": "belen-de-escobar",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7880, -34.3485],
+          [-58.7880, -34.3525]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Independencia",
+        "description": "De Los Lazaristas a Av. Tapia de Cruz",
+        "locality": "belen-de-escobar",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7880, -34.3465],
+          [-58.7850, -34.3465]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Independencia",
+        "description": "De Travi a Colectora Este",
+        "locality": "belen-de-escobar",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7830, -34.3465],
+          [-58.7800, -34.3465]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "César Díaz",
+        "description": "Entre Colón y Moreno",
+        "locality": "belen-de-escobar",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7890, -34.3525],
+          [-58.7890, -34.3545]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Belgrano",
+        "description": "De Don Bosco a Av. 25 de Mayo",
+        "locality": "belen-de-escobar",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7860, -34.3505],
+          [-58.7840, -34.3505]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "San Lorenzo",
+        "description": "Entre Av. Tapia de Cruz y Don Bosco",
+        "locality": "belen-de-escobar",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7850, -34.3485],
+          [-58.7830, -34.3485]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gelves",
+        "description": "De Libertad a Brussi",
+        "locality": "belen-de-escobar",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7870, -34.3545],
+          [-58.7850, -34.3545]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "General Paz",
+        "description": "Entre Brussi y Libertad",
+        "locality": "belen-de-escobar",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7850, -34.3565],
+          [-58.7870, -34.3565]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Moreno",
+        "description": "De Estrada a Av. Tapia de Cruz",
+        "locality": "belen-de-escobar",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7910, -34.3545],
+          [-58.7850, -34.3545]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Belén",
+        "description": "Entre Libertad y Av. San Martín",
+        "locality": "belen-de-escobar",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7870, -34.3585],
+          [-58.7840, -34.3585]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sarmiento",
+        "description": "De Blvd. Pres. Perón a Colectora Oeste",
+        "locality": "garin",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7500, -34.4200],
+          [-58.7450, -34.4200]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "General Las Heras",
+        "description": "Entre Colectora Oeste y Blvd. Pres. Perón",
+        "locality": "garin",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7450, -34.4220],
+          [-58.7500, -34.4220]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Alvear",
+        "description": "De Lamberti a Colectora Oeste",
+        "locality": "garin",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7480, -34.4240],
+          [-58.7450, -34.4240]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mitre",
+        "description": "Entre Colectora Oeste y Cabo 1º Sullings",
+        "locality": "garin",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7450, -34.4260],
+          [-58.7470, -34.4260]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Eva Perón",
+        "description": "De 2 de Abril a Buenos Aires",
+        "locality": "garin",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7520, -34.4180],
+          [-58.7500, -34.4180]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Roma",
+        "description": "Entre Buenos Aires y 2 de Abril",
+        "locality": "garin",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7500, -34.4160],
+          [-58.7520, -34.4160]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Padre Perna",
+        "description": "De 2 de Abril a Buenos Aires",
+        "locality": "garin",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7520, -34.4140],
+          [-58.7500, -34.4140]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cabo 1º Sullings",
+        "description": "De 2 de Abril a Buenos Aires",
+        "locality": "garin",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7520, -34.4260],
+          [-58.7500, -34.4260]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cabo 1º Sullings",
+        "description": "Doble mano entre Jorge Testa y Mitre (pasa a ser doble mano)",
+        "locality": "garin",
+        "category": "double-way"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7470, -34.4260],
+          [-58.7470, -34.4280]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lamberti",
+        "description": "De Buenos Aires a 2 de Abril",
+        "locality": "garin",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7500, -34.4240],
+          [-58.7520, -34.4240]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Inocencio Arias",
+        "description": "Entre 2 de Abril y Sarmiento",
+        "locality": "garin",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7520, -34.4190],
+          [-58.7500, -34.4200]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ballester",
+        "description": "De Sarmiento a Buenos Aires",
+        "locality": "garin",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7500, -34.4200],
+          [-58.7500, -34.4220]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "La Plata",
+        "description": "Desde Ituzaingó hasta Almirante Brown",
+        "locality": "ingeniero-maschwitz",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7300, -34.3800],
+          [-58.7280, -34.3800]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Villanueva",
+        "description": "Prohibido estacionar sobre la mano derecha entre Almirante Brown y La Plata",
+        "locality": "ingeniero-maschwitz",
+        "category": "no-parking"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7290, -34.3790],
+          [-58.7280, -34.3800]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Colectora Este (Av. De los Inmigrantes)",
+        "description": "Doble sentido entre Spadaccini y Las Casuarinas",
+        "locality": "belen-de-escobar",
+        "category": "double-way"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7800, -34.3450],
+          [-58.7800, -34.3470]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Colectora Este (Av. De los Inmigrantes)",
+        "description": "Mano única desde Las Casuarinas hasta Docente Serantes de Alvear",
+        "locality": "belen-de-escobar",
+        "category": "collector-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7800, -34.3470],
+          [-58.7800, -34.3490]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Colectora Oeste",
+        "description": "Doble sentido entre Artigas y César Díaz",
+        "locality": "belen-de-escobar",
+        "category": "double-way"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7920, -34.3510],
+          [-58.7920, -34.3530]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Colectora Oeste",
+        "description": "Mano única hacia el sur en ese sector",
+        "locality": "belen-de-escobar",
+        "category": "collector-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7920, -34.3530],
+          [-58.7920, -34.3550]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Colectora Oeste (Garín)",
+        "description": "Doble sentido entre Mendoza y General Las Heras",
+        "locality": "garin",
+        "category": "double-way"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7450, -34.4210],
+          [-58.7450, -34.4230]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Colectora Oeste (Garín)",
+        "description": "Mano única desde Corrientes hasta Mendoza",
+        "locality": "garin",
+        "category": "collector-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7450, -34.4190],
+          [-58.7450, -34.4210]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Colectora Oeste (Garín)",
+        "description": "Mano única desde General Las Heras hasta la avenida Belgrano",
+        "locality": "garin",
+        "category": "collector-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7450, -34.4230],
+          [-58.7450, -34.4250]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tucumán",
+        "description": "Mano única desde colectora hasta H. Yrigoyen sentido este-oeste",
+        "locality": "garin",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7450, -34.4170],
+          [-58.7470, -34.4170]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Corrientes",
+        "description": "Único sentido de H. Yrigoyen hasta Colectora Oeste, sentido oeste-este",
+        "locality": "garin",
+        "category": "street-change"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-58.7470, -34.4190],
+          [-58.7450, -34.4190]
+        ]
+      }
+    }
+  ]
+}
