@@ -1,4 +1,5 @@
-import { streetChangesData } from './streetChangesData.js';
+// Importar el archivo GeoJSON directamente
+import streetChangesJson from './street_changes.geojson';
 
 // Función para convertir datos GeoJSON en el formato necesario para nuestros mapas
 export function getMapDataForLocation(locationName) {
