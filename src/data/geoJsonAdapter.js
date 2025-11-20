@@ -1,10 +1,10 @@
 // Importar el archivo GeoJSON directamente
-import streetChangesJson from './street_changes.geojson';
+import streetChangesJson from './street_changes.json';
 
 // Función para convertir datos GeoJSON en el formato necesario para nuestros mapas
 export function getMapDataForLocation(locationName) {
   // Filtrar características para la ubicación específica
-  const locationFeatures = streetChangesData.features.filter(feature => 
+  const locationFeatures = streetChangesJson.features.filter(feature => 
     feature.properties.location === locationName
   );
 

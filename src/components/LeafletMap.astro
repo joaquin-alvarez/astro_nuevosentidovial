@@ -52,6 +52,14 @@ const { mapId, locationName, centerLat, centerLng, initialZoom, mapData } = Astr
       });
     }
     
+    // Cargar Leaflet.PolylineDecorator para las flechas
+    await new Promise((resolve) => {
+      const polylineDecoratorScript = document.createElement('script');
+      polylineDecoratorScript.src = 'https://unpkg.com/leaflet-polylinedecorator/dist/leaflet.polylineDecorator.js';
+      polylineDecoratorScript.onload = resolve;
+      document.head.appendChild(polylineDecoratorScript);
+    });
+    
     // Inicializar el mapa
     const map = L.map(mapId).setView([centerLat, centerLng], initialZoom);
     
@@ -61,31 +69,15 @@ const { mapId, locationName, centerLat, centerLng, initialZoom, mapData } = Astr
       maxZoom: 19
     }).addTo(map);
     
-    // Función para crear un icono de flecha personalizado
-    function createArrowIcon(direction) {
-      // Crea un icono de flecha según la dirección
-      const arrowIcons = {
-        'norte': '↑',
-        'sur': '↓',
-        'este': '→',
-        'oeste': '←',
-        'norte-sur': '↕',
-        'este-oeste': '↔',
-        'sur-este': '↘',
-        'sur-oeste': '↙',
-        'norte-este': '↗',
-        'norte-oeste': '↖',
-        'none': '⊘'
-      };
-      
-      const arrowIcon = L.divIcon({
-        html: `<div class="arrow-icon">${arrowIcons[direction] || '→'}</div>`,
-        className: 'arrow-icon-container',
-        iconSize: [30, 30],
-        iconAnchor: [15, 15]
-      });
-      
-      return arrowIcon;
+    // Determinar la dirección de las flechas según el tipo de cambio
+    function determineDirection(direction, type) {
+      if (type === 'doubleway') {
+        return 'bidirectional';
+      } else if (direction === 'none') {
+        return 'none';
+      } else {
+        return direction;
+      }
     }
     
     // Determinar el color según el tipo de cambio
@@ -100,39 +92,90 @@ const { mapId, locationName, centerLat, centerLng, initialZoom, mapData } = Astr
     
     // Agregar líneas para las calles con cambios
     mapData.forEach(street => {
-      // Crear la línea para la calle
+      // Obtener el color basado en el tipo de calle
+      const streetColor = getStreetColor(street.type);
+      
+      // Crear una capa invisible más ancha para facilitar el clic
+      const clickablePath = L.polyline(street.coordinates, {
+        color: 'transparent',
+        weight: 12, // El doble de ancho pero invisible
+        opacity: 0
+      }).addTo(map);
+      
+      // Crear la línea visible para la calle
       const streetPath = L.polyline(street.coordinates, {
-        color: getStreetColor(street.type),
-        weight: 5,
+        color: streetColor,
+        weight: 6,
         opacity: 0.8
       }).addTo(map);
       
-      // Agregar popup con información
-      streetPath.bindPopup(`
+      // Preparar texto para el popup con mejor descripción del sentido
+      let sentidoTexto = '';
+      if (street.type === 'change') {
+        sentidoTexto = 'Cambió de sentido: ahora circulación en un solo sentido';
+      } else if (street.type === 'doubleway') {
+        sentidoTexto = 'Mantiene doble sentido de circulación';
+      } else if (street.type === 'noparking') {
+        sentidoTexto = 'Prohibido estacionar';
+      }
+      
+      // Agregar popup con información mejorada a ambas capas
+      const popupContent = `
         <div class="street-popup">
           <h3>${street.name}</h3>
           <p><strong>Tramo:</strong> ${street.section}</p>
-          <p><strong>Nueva dirección:</strong> ${street.newDirection}</p>
+          <p><strong>Sentido:</strong> ${sentidoTexto}</p>
           ${street.details ? `<p>${street.details}</p>` : ''}
         </div>
-      `);
+      `;
       
-      // Agregar flecha para mostrar la dirección si no es 'none'
+      // Aplicar el popup a la línea visible
+      streetPath.bindPopup(popupContent);
+      
+      // Aplicar el popup también a la capa clickeable invisible
+      clickablePath.bindPopup(popupContent);
+      
+      // Añadir etiqueta visible en el mapa
+      const midpointIndex = Math.floor(street.coordinates.length / 2);
+      const labelPosition = street.coordinates[midpointIndex];
+      
+      // Crear la etiqueta que también es clickeable
+      const streetLabel = L.marker(labelPosition, {
+        icon: L.divIcon({
+          html: `<div class="street-label">${street.name}</div>`,
+          className: 'street-label-container',
+          iconSize: [180, 30],
+          iconAnchor: [90, 15]
+        }),
+        interactive: true,  // Hacer la etiqueta interactiva
+        zIndexOffset: 1000  // Asegurar que está por encima de otras capas
+      }).addTo(map);
+      
+      // Vincular el mismo popup a la etiqueta
+      streetLabel.bindPopup(popupContent);
+      
+      // Agregar flechas de dirección usando PolylineDecorator
       if (street.direction && street.direction !== 'none') {
-        // Calcular punto medio para colocar la flecha
-        const midpointIndex = Math.floor(street.coordinates.length / 2);
-        const arrowPosition = street.coordinates[midpointIndex];
+        let pattern;
         
-        // Añadir el icono de flecha
-        const directionMarker = L.marker(arrowPosition, {
-          icon: createArrowIcon(street.direction),
-          zIndexOffset: 1000,
-          interactive: false // Hace que el marcador no sea interactivo para evitar conflictos con la línea
+        if (street.type === 'doubleway' || street.direction === 'norte-sur' || street.direction === 'este-oeste') {
+          // Doble flecha para doble sentido
+          pattern = [
+            { offset: '25%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { color: streetColor, fillOpacity: 1, weight: 2 } }) },
+            { offset: '75%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { color: streetColor, fillOpacity: 1, weight: 2 }, heading: -180 }) }
+          ];
+        } else {
+          // Flecha simple para un solo sentido
+          pattern = [
+            { offset: '25%', repeat: '50px', symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { color: streetColor, fillOpacity: 1, weight: 2 } }) }
+          ];
+        }
+        
+        // Agregar las flechas pero asegurándonos que no interfieran con los clics
+        const decorator = L.polylineDecorator(streetPath, {
+          patterns: pattern,
+          interactive: false // Evitar que las flechas capturen eventos de clic
         }).addTo(map);
-        
-        console.log(`Added arrow for ${street.name} with direction ${street.direction} at position ${arrowPosition}`);
-      } else {
-        console.log(`No direction specified for ${street.name}`);
       }
     });
   });
@@ -204,24 +247,25 @@ const { mapId, locationName, centerLat, centerLng, initialZoom, mapData } = Astr
     color: var(--accent-dark);
   }
   
-  .arrow-icon-container {
-    background: none \!important;
+  .street-label-container {
+    background: none !important;
   }
   
-  .arrow-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    background-color: rgba(30, 136, 229, 0.9);
-    border: 2px solid white;
-    border-radius: 50%;
+  .street-label {
+    background-color: rgba(0, 0, 0, 0.8);
     color: white;
-    font-size: 20px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
     font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-    z-index: 1000;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    z-index: 900;
+    border: 2px solid white;
+    cursor: pointer;
   }
   
   /* Estilos para el popup */
