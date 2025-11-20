@@ -1,9 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import LeafletMap from '../components/LeafletMap.astro';
+import { ingenieroMaschwitzMapData } from '../data/geoJsonAdapter.js';
 ---
 
 <Layout title="Ingeniero Maschwitz - Cambios de sentido de calles">
 	<section>
+		<LeafletMap 
+			mapId="mapa-ingeniero-maschwitz" 
+			locationName="Ingeniero Maschwitz"
+			centerLat={ingenieroMaschwitzMapData.center[0]}
+			centerLng={ingenieroMaschwitzMapData.center[1]}
+			initialZoom={ingenieroMaschwitzMapData.zoom}
+			mapData={ingenieroMaschwitzMapData.streets}
+		/>
 		<h2>Ingeniero Maschwitz</h2>
 		<p>
 			Las modificaciones apuntan a ordenar los ingresos y egresos del casco urbano, especialmente en zonas escolares 

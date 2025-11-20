@@ -1,9 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import LeafletMap from '../components/LeafletMap.astro';
+import { colectorasMapData } from '../data/geoJsonAdapter.js';
 ---
 
 <Layout title="Cambios en Colectoras - Cambios de sentido de calles">
 	<section>
+		<LeafletMap 
+			mapId="mapa-colectoras" 
+			locationName="Colectoras"
+			centerLat={colectorasMapData.center[0]}
+			centerLng={colectorasMapData.center[1]}
+			initialZoom={colectorasMapData.zoom}
+			mapData={colectorasMapData.streets}
+		/>
 		<h2>Cambios en las Colectoras</h2>
 		<p>
 			Los cambios en las colectoras buscan mejorar la seguridad vial y la fluidez del tránsito en puntos críticos 

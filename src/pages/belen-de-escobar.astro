@@ -1,9 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import LeafletMap from '../components/LeafletMap.astro';
+import { belenDeEscobarMapData } from '../data/geoJsonAdapter.js';
 ---
 
 <Layout title="Belén de Escobar - Cambios de sentido de calles">
 	<section>
+		<LeafletMap 
+			mapId="mapa-belen-de-escobar" 
+			locationName="Belén de Escobar"
+			centerLat={belenDeEscobarMapData.center[0]}
+			centerLng={belenDeEscobarMapData.center[1]}
+			initialZoom={belenDeEscobarMapData.zoom}
+			mapData={belenDeEscobarMapData.streets}
+		/>
 		<h2>Belén de Escobar</h2>
 		<p>
 			El nuevo esquema reorganiza el tránsito en el casco céntrico, priorizando la circulación ordenada y segura 

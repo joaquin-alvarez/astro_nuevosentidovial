@@ -1,0 +1,258 @@
+---
+export interface Props {
+  mapId: string;
+  locationName: string;
+  centerLat: number;
+  centerLng: number;
+  initialZoom: number;
+  mapData: any;
+}
+
+const { mapId, locationName, centerLat, centerLng, initialZoom, mapData } = Astro.props;
+---
+
+<div class="map-container">
+  <div id={mapId} class="map"></div>
+  <div class="map-legend">
+    <h4>Cambios de sentido en {locationName}</h4>
+    <div class="legend-item">
+      <span class="legend-color change-direction"></span>
+      <span>Cambio de sentido</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-color double-way"></span>
+      <span>Doble sentido</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-color no-parking"></span>
+      <span>Prohibido estacionar</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-icon">↑</span>
+      <span>Dirección de circulación</span>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ mapId, centerLat, centerLng, initialZoom, mapData }}>
+  // Importar Leaflet solo en el lado del cliente
+  document.addEventListener('DOMContentLoaded', async () => {
+    // Cargar dinamicamente Leaflet desde CDN si no está ya cargado
+    if (!window.L) {
+      await new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+        script.onload = resolve;
+        document.head.appendChild(script);
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+        document.head.appendChild(link);
+      });
+    }
+    
+    // Inicializar el mapa
+    const map = L.map(mapId).setView([centerLat, centerLng], initialZoom);
+    
+    // Agregar la capa base de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19
+    }).addTo(map);
+    
+    // Función para crear un icono de flecha personalizado
+    function createArrowIcon(direction) {
+      // Crea un icono de flecha según la dirección
+      const arrowIcons = {
+        'norte': '↑',
+        'sur': '↓',
+        'este': '→',
+        'oeste': '←',
+        'norte-sur': '↕',
+        'este-oeste': '↔',
+        'sur-este': '↘',
+        'sur-oeste': '↙',
+        'norte-este': '↗',
+        'norte-oeste': '↖',
+        'none': '⊘'
+      };
+      
+      const arrowIcon = L.divIcon({
+        html: `<div class="arrow-icon">${arrowIcons[direction] || '→'}</div>`,
+        className: 'arrow-icon-container',
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
+      });
+      
+      return arrowIcon;
+    }
+    
+    // Determinar el color según el tipo de cambio
+    function getStreetColor(type) {
+      switch(type) {
+        case 'change': return '#1E88E5';
+        case 'doubleway': return '#27ae60';
+        case 'noparking': return '#e74c3c';
+        default: return '#FF8A65';
+      }
+    }
+    
+    // Agregar líneas para las calles con cambios
+    mapData.forEach(street => {
+      // Crear la línea para la calle
+      const streetPath = L.polyline(street.coordinates, {
+        color: getStreetColor(street.type),
+        weight: 5,
+        opacity: 0.8
+      }).addTo(map);
+      
+      // Agregar popup con información
+      streetPath.bindPopup(`
+        <div class="street-popup">
+          <h3>${street.name}</h3>
+          <p><strong>Tramo:</strong> ${street.section}</p>
+          <p><strong>Nueva dirección:</strong> ${street.newDirection}</p>
+          ${street.details ? `<p>${street.details}</p>` : ''}
+        </div>
+      `);
+      
+      // Agregar flecha para mostrar la dirección si no es 'none'
+      if (street.direction && street.direction !== 'none') {
+        // Calcular punto medio para colocar la flecha
+        const midpointIndex = Math.floor(street.coordinates.length / 2);
+        const arrowPosition = street.coordinates[midpointIndex];
+        
+        // Añadir el icono de flecha
+        const directionMarker = L.marker(arrowPosition, {
+          icon: createArrowIcon(street.direction),
+          zIndexOffset: 1000,
+          interactive: false // Hace que el marcador no sea interactivo para evitar conflictos con la línea
+        }).addTo(map);
+        
+        console.log(`Added arrow for ${street.name} with direction ${street.direction} at position ${arrowPosition}`);
+      } else {
+        console.log(`No direction specified for ${street.name}`);
+      }
+    });
+  });
+</script>
+
+<style>
+  .map-container {
+    position: relative;
+    width: 100%;
+    margin: 2rem 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  
+  .map {
+    height: 500px;
+    width: 100%;
+    z-index: 1;
+  }
+  
+  .map-legend {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: white;
+    padding: 10px 15px;
+    border-radius: var(--radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 500;
+  }
+  
+  .map-legend h4 {
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-dark);
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .legend-color {
+    display: inline-block;
+    width: 16px;
+    height: 4px;
+    margin-right: 8px;
+    border-radius: 2px;
+  }
+  
+  .legend-color.change-direction {
+    background-color: #1E88E5;
+  }
+  
+  .legend-color.double-way {
+    background-color: #27ae60;
+  }
+  
+  .legend-color.no-parking {
+    background-color: #e74c3c;
+  }
+  
+  .legend-icon {
+    font-size: 18px;
+    margin-right: 8px;
+    color: var(--accent-dark);
+  }
+  
+  .arrow-icon-container {
+    background: none \!important;
+  }
+  
+  .arrow-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(30, 136, 229, 0.9);
+    border: 2px solid white;
+    border-radius: 50%;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+  }
+  
+  /* Estilos para el popup */
+  :global(.street-popup h3) {
+    color: var(--accent-dark);
+    font-size: 16px;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  
+  :global(.street-popup p) {
+    margin: 5px 0;
+    font-size: 14px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .map {
+      height: 400px;
+    }
+    
+    .map-legend {
+      bottom: 10px;
+      right: 10px;
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+    
+    .legend-color {
+      width: 12px;
+      height: 3px;
+    }
+  }
+</style>

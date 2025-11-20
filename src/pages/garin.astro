@@ -1,9 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import LeafletMap from '../components/LeafletMap.astro';
+import { garinMapData } from '../data/geoJsonAdapter.js';
 ---
 
 <Layout title="Garín - Cambios de sentido de calles">
 	<section>
+		<LeafletMap 
+			mapId="mapa-garin" 
+			locationName="Garín"
+			centerLat={garinMapData.center[0]}
+			centerLng={garinMapData.center[1]}
+			initialZoom={garinMapData.zoom}
+			mapData={garinMapData.streets}
+		/>
 		<h2>Garín</h2>
 		<p>
 			El plan redefine sentidos de circulación en el área central para mejorar la conexión entre el Boulevard Presidente Perón, 
