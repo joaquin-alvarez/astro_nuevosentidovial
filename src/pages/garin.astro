@@ -4,11 +4,29 @@ import LeafletMap from '../components/LeafletMap.astro';
 import { getMapDataForLocation } from '../data/geoJsonAdapter.js';
 
 // Obtener datos filtrados para Garín (excluyendo las colectoras)
-const garinMapData = {
-  center: [-34.417, -58.730],
-  zoom: 15,
-  streets: getMapDataForLocation('Garín', false)
-};
+const streets = getMapDataForLocation('Garín', false);
+
+// Calcular centro basado en las calles
+function calculateCenter(streets) {
+  if (streets.length === 0) return [-34.417, -58.730]; // Valor por defecto para Garín
+  
+  let totalLat = 0;
+  let totalLng = 0;
+  let pointCount = 0;
+  
+  streets.forEach(street => {
+    street.coordinates.forEach(coord => {
+      totalLat += coord[0]; // latitud
+      totalLng += coord[1]; // longitud
+      pointCount++;
+    });
+  });
+  
+  return [totalLat / pointCount, totalLng / pointCount];
+}
+
+const center = calculateCenter(streets);
+const zoom = 15;
 ---
 
 <Layout title="Garín - Cambios de sentido de calles">
@@ -16,10 +34,10 @@ const garinMapData = {
 		<LeafletMap 
 			mapId="mapa-garin" 
 			locationName="Garín"
-			centerLat={garinMapData.center[0]}
-			centerLng={garinMapData.center[1]}
-			initialZoom={garinMapData.zoom}
-			mapData={garinMapData.streets || []}
+			centerLat={center[0]}
+			centerLng={center[1]}
+			initialZoom={zoom}
+			mapData={streets || []}
 		/>
 		<h2>Garín</h2>
 		<p>

@@ -4,18 +4,34 @@ import LeafletMap from '../components/LeafletMap.astro';
 import { getMapDataForLocation } from '../data/geoJsonAdapter.js';
 
 // Obtener datos filtrados para colectoras de Belén de Escobar
-const belenColectorasData = {
-  center: [-34.342, -58.810],  // Centro para Belén de Escobar
-  zoom: 14,
-  streets: getMapDataForLocation('Belén de Escobar', true)
-};
+const belenStreets = getMapDataForLocation('Belén de Escobar', true);
+
+// Calcular centro basado en las calles de Belén
+function calculateCenter(streets) {
+  if (streets.length === 0) return [-34.342, -58.810]; // Valor por defecto 
+  
+  let totalLat = 0;
+  let totalLng = 0;
+  let pointCount = 0;
+  
+  streets.forEach(street => {
+    street.coordinates.forEach(coord => {
+      totalLat += coord[0]; // latitud
+      totalLng += coord[1]; // longitud
+      pointCount++;
+    });
+  });
+  
+  return [totalLat / pointCount, totalLng / pointCount];
+}
+
+const belenCenter = calculateCenter(belenStreets);
+const belenZoom = 14;
 
 // Obtener datos filtrados para colectoras de Garín
-const garinColectorasData = {
-  center: [-34.417, -58.730],  // Centro para Garín
-  zoom: 14,
-  streets: getMapDataForLocation('Garín', true)
-};
+const garinStreets = getMapDataForLocation('Garín', true);
+const garinCenter = calculateCenter(garinStreets);
+const garinZoom = 14;
 ---
 
 <Layout title="Cambios en Colectoras - Cambios de sentido de calles">
@@ -33,10 +49,10 @@ const garinColectorasData = {
 					<LeafletMap 
 						mapId="mapa-colectoras-belen" 
 						locationName="Belén de Escobar - Colectoras"
-						centerLat={belenColectorasData.center[0]}
-						centerLng={belenColectorasData.center[1]}
-						initialZoom={belenColectorasData.zoom}
-						mapData={belenColectorasData.streets || []}
+						centerLat={belenCenter[0]}
+						centerLng={belenCenter[1]}
+						initialZoom={belenZoom}
+						mapData={belenStreets || []}
 					/>
 				</div>
 			</div>
@@ -47,10 +63,10 @@ const garinColectorasData = {
 					<LeafletMap 
 						mapId="mapa-colectoras-garin" 
 						locationName="Garín - Colectoras"
-						centerLat={garinColectorasData.center[0]}
-						centerLng={garinColectorasData.center[1]}
-						initialZoom={garinColectorasData.zoom}
-						mapData={garinColectorasData.streets || []}
+						centerLat={garinCenter[0]}
+						centerLng={garinCenter[1]}
+						initialZoom={garinZoom}
+						mapData={garinStreets || []}
 					/>
 				</div>
 			</div>
