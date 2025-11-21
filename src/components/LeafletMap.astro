@@ -129,30 +129,113 @@ const { mapId, locationName, centerLat, centerLng, initialZoom, mapData } = Astr
         </div>
       `;
       
-      // Aplicar el popup a la línea visible
-      streetPath.bindPopup(popupContent);
+      // Ahora usaremos el popup mejorado que crearemos más adelante
+      // Primero, extraemos las calles y creamos una descripción más detallada
       
-      // Aplicar el popup también a la capa clickeable invisible
-      clickablePath.bindPopup(popupContent);
-      
-      // Añadir etiqueta visible en el mapa
+      // Encontrar el punto medio para el icono
       const midpointIndex = Math.floor(street.coordinates.length / 2);
-      const labelPosition = street.coordinates[midpointIndex];
+      const iconPosition = street.coordinates[midpointIndex];
       
-      // Crear la etiqueta que también es clickeable
-      const streetLabel = L.marker(labelPosition, {
-        icon: L.divIcon({
-          html: `<div class="street-label">${street.name}</div>`,
-          className: 'street-label-container',
-          iconSize: [180, 30],
-          iconAnchor: [90, 15]
-        }),
-        interactive: true,  // Hacer la etiqueta interactiva
-        zIndexOffset: 1000  // Asegurar que está por encima de otras capas
+      // Extraer las calles de la descripción del tramo
+      const sectionParts = street.section.split(' ');
+      let calle1 = '', calle2 = '';
+      
+      // Intentar identificar las calles mencionadas en la descripción
+      if (street.section.toLowerCase().includes('entre')) {
+        const entreIndex = sectionParts.findIndex(word => word.toLowerCase() === 'entre');
+        if (entreIndex !== -1 && entreIndex + 1 < sectionParts.length) {
+          calle1 = sectionParts[entreIndex + 1];
+          // Buscar la segunda calle después de 'y'
+          const yIndex = sectionParts.findIndex((word, index) => index > entreIndex && (word.toLowerCase() === 'y' || word.toLowerCase() === 'e'));
+          if (yIndex !== -1 && yIndex + 1 < sectionParts.length) {
+            calle2 = sectionParts[yIndex + 1];
+          }
+        }
+      } else if (street.section.toLowerCase().includes('desde') || street.section.toLowerCase().includes('de')) {
+        const desdeIndex = sectionParts.findIndex(word => 
+          word.toLowerCase() === 'desde' || word.toLowerCase() === 'de');
+        if (desdeIndex !== -1 && desdeIndex + 1 < sectionParts.length) {
+          calle1 = sectionParts[desdeIndex + 1];
+          // Buscar la segunda calle después de 'hasta' o 'a'
+          const hastaIndex = sectionParts.findIndex((word, index) => 
+            index > desdeIndex && (word.toLowerCase() === 'hasta' || word.toLowerCase() === 'a'));
+          if (hastaIndex !== -1 && hastaIndex + 1 < sectionParts.length) {
+            calle2 = sectionParts[hastaIndex + 1];
+          }
+        }
+      }
+      
+      // Si no se pudo identificar, usar valores genéricos
+      if (!calle1) calle1 = 'primera calle';
+      if (!calle2) calle2 = 'segunda calle';
+      
+      // Crear un texto descriptivo más claro para el sentido
+      let sentidoDetallado = '';
+      if (street.type === 'change') {
+        sentidoDetallado = `de ${calle1} hacia ${calle2}. Ahora circulación en un solo sentido`;
+      } else if (street.type === 'doubleway') {
+        sentidoDetallado = `Doble sentido entre ${calle1} y ${calle2}`;
+      } else if (street.type === 'noparking') {
+        sentidoDetallado = `Prohibido estacionar entre ${calle1} y ${calle2}`;
+      }
+      
+      // Crear el badge para el tipo de cambio
+      let badgeClass = '';
+      let badgeText = '';
+      
+      if (street.type === 'change') {
+        badgeClass = 'street-badge change';
+        badgeText = 'Cambio de sentido';
+      } else if (street.type === 'doubleway') {
+        badgeClass = 'street-badge doubleway';
+        badgeText = 'Doble sentido';
+      } else if (street.type === 'noparking') {
+        badgeClass = 'street-badge noparking';
+        badgeText = 'Prohibido estacionar';
+      }
+      
+      // Crear un icono clickeable con el color según el tipo
+      const streetIcon = L.divIcon({
+        html: `<div class="street-icon ${street.type}"><span class="icon-tooltip">${street.name}</span></div>`,
+        className: 'street-icon-container',
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      });
+      
+      const streetMarker = L.marker(iconPosition, {
+        icon: streetIcon,
+        interactive: true,
+        zIndexOffset: 1000
       }).addTo(map);
       
-      // Vincular el mismo popup a la etiqueta
-      streetLabel.bindPopup(popupContent);
+      // Definir estilos inline para el badge según el tipo
+      let badgeStyle = '';
+      if (street.type === 'change') {
+        badgeStyle = 'display:inline-block;padding: 0.25rem 0.5rem;border-radius:.5em;color:white;font-size:12px;font-weight:bold;margin-bottom:8px;background-color:#1E88E5;';
+      } else if (street.type === 'doubleway') {
+        badgeStyle = 'display:inline-block;padding: 0.25rem 0.5rem;border-radius:.5em;color:white;font-size:12px;font-weight:bold;margin-bottom:8px;background-color:#27ae60;';
+      } else if (street.type === 'noparking') {
+        badgeStyle = 'display:inline-block;padding: 0.25rem 0.5rem;border-radius:.5em;color:white;font-size:12px;font-weight:bold;margin-bottom:8px;background-color:#e74c3c;';
+      }
+      
+      // Determinar si mostrar o no la línea de sentido (no mostrar para prohibido estacionar)
+      const sentidoLine = street.type === 'noparking' ? '' : `<p><strong>Sentido:</strong> ${sentidoDetallado}</p>`;
+      
+      // Crear un popup mejorado con badges usando estilos inline
+      const popupContentEnhanced = `
+        <div class="street-popup">
+          <span style="${badgeStyle}">${badgeText}</span>
+          <h3 style="font-size:18px;margin:5px 0;font-weight:600;">${street.name}</h3>
+          <p style="margin:5px 0;font-size:16px;"><strong>Tramo:</strong> ${street.section}</p>
+          ${sentidoLine}
+          ${street.details ? `<p style="margin:5px 0;font-size:16px;">${street.details}</p>` : ''}
+        </div>
+      `;
+      
+      // Asignar este popup mejorado al marcador y a las líneas
+      streetMarker.bindPopup(popupContentEnhanced);
+      streetPath.bindPopup(popupContentEnhanced);
+      clickablePath.bindPopup(popupContentEnhanced);
       
       // Agregar flechas de dirección usando PolylineDecorator
       if (street.direction && street.direction !== 'none') {
@@ -247,38 +330,99 @@ const { mapId, locationName, centerLat, centerLng, initialZoom, mapData } = Astr
     color: var(--accent-dark);
   }
   
-  .street-label-container {
+  .street-icon-container {
     background: none !important;
   }
   
-  .street-label {
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: bold;
-    text-align: center;
+  .street-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    position: relative;
+    cursor: pointer;
+    z-index: 1000;
+  }
+  
+  .street-icon.change {
+    background-color: #1E88E5;
+  }
+  
+  .street-icon.doubleway {
+    background-color: #27ae60;
+  }
+  
+  .street-icon.noparking {
+    background-color: #e74c3c;
+  }
+  
+  :global(.icon-tooltip) {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 4px 8px;
+    position: absolute;
+    z-index: 1001;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    width: 120px;
+    font-size: 12px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    z-index: 900;
-    border: 2px solid white;
-    cursor: pointer;
+  }
+  
+  :global(.street-icon:hover .icon-tooltip) {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  /* Estilos para los badges en los popups */
+  :global(.street-badge) {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  :global(.street-badge.change) {
+    background-color: #1E88E5;
+  }
+  
+  :global(.street-badge.doubleway) {
+    background-color: #27ae60;
+  }
+  
+  :global(.street-badge.noparking) {
+    background-color: #e74c3c;
   }
   
   /* Estilos para el popup */
   :global(.street-popup h3) {
     color: var(--accent-dark);
-    font-size: 16px;
-    margin-bottom: 5px;
+    font-size: 20px;
+    margin-bottom: 10px !important;
     font-weight: 600;
+    font-family: 'Source Sans 3', system-ui, sans-serif;
   }
   
   :global(.street-popup p) {
-    margin: 5px 0;
-    font-size: 14px;
+    margin: 10px 0 !important;
+    font-size: 16px;
+    line-height: 1.4;
+    font-family: 'Source Sans 3', system-ui, sans-serif;
+  }
+
+  :global(.street-popup) {
+    font-family: 'Source Sans 3', system-ui, sans-serif;
   }
   
   /* Responsive */
