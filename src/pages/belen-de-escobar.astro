@@ -1,7 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import LeafletMap from '../components/LeafletMap.astro';
-import { belenDeEscobarMapData } from '../data/geoJsonAdapter.js';
+import { getMapDataForLocation } from '../data/geoJsonAdapter.js';
+
+// Obtener datos filtrados para Belén de Escobar (excluyendo las colectoras)
+const belenDeEscobarMapData = {
+  center: [-34.342, -58.797],
+  zoom: 15,
+  streets: getMapDataForLocation('Belén de Escobar', false)
+};
 ---
 
 <Layout title="Belén de Escobar - Cambios de sentido de calles">
@@ -12,7 +19,7 @@ import { belenDeEscobarMapData } from '../data/geoJsonAdapter.js';
 			centerLat={belenDeEscobarMapData.center[0]}
 			centerLng={belenDeEscobarMapData.center[1]}
 			initialZoom={belenDeEscobarMapData.zoom}
-			mapData={belenDeEscobarMapData.streets}
+			mapData={belenDeEscobarMapData.streets || []}
 		/>
 		<h2>Belén de Escobar</h2>
 		<p>

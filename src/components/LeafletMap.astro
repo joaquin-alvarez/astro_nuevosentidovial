@@ -89,9 +89,10 @@ const { mapId, locationName, centerLat, centerLng, initialZoom, mapData } = Astr
         default: return '#FF8A65';
       }
     }
-    
+    // Asegurarnos que mapData sea un array válido
+    const streetData = Array.isArray(mapData) ? mapData : [];
     // Agregar líneas para las calles con cambios
-    mapData.forEach(street => {
+    streetData.forEach(street => {
       // Obtener el color basado en el tipo de calle
       const streetColor = getStreetColor(street.type);
       
@@ -242,11 +243,26 @@ const { mapId, locationName, centerLat, centerLng, initialZoom, mapData } = Astr
         let pattern;
         
         if (street.type === 'doubleway' || street.direction === 'norte-sur' || street.direction === 'este-oeste') {
-          // Doble flecha para doble sentido
-          pattern = [
-            { offset: '25%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { color: streetColor, fillOpacity: 1, weight: 2 } }) },
-            { offset: '75%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { color: streetColor, fillOpacity: 1, weight: 2 }, heading: -180 }) }
-          ];
+          // Para calles de doble sentido, usamos un estilo diferente
+          if (street.type === 'doubleway') {
+            // Usar línea punteada para doble sentido en lugar de flechas
+            streetPath.setStyle({
+              dashArray: '10, 10',  // Patrón de línea punteada
+              weight: 8,  // Hacer la línea más gruesa
+            });
+            
+            // Agregar dos flechas opuestas en el centro
+            pattern = [
+              { offset: '40%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 18, pathOptions: { color: streetColor, fillOpacity: 1, weight: 3 } }) },
+              { offset: '60%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 18, pathOptions: { color: streetColor, fillOpacity: 1, weight: 3 }, heading: -180 }) }
+            ];
+          } else {
+            // Para otras direcciones bidireccionales
+            pattern = [
+              { offset: '25%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { color: streetColor, fillOpacity: 1, weight: 2 } }) },
+              { offset: '75%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { color: streetColor, fillOpacity: 1, weight: 2 }, heading: -180 }) }
+            ];
+          }
         } else {
           // Flecha simple para un solo sentido
           pattern = [

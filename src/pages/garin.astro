@@ -1,7 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import LeafletMap from '../components/LeafletMap.astro';
-import { garinMapData } from '../data/geoJsonAdapter.js';
+import { getMapDataForLocation } from '../data/geoJsonAdapter.js';
+
+// Obtener datos filtrados para Garín (excluyendo las colectoras)
+const garinMapData = {
+  center: [-34.417, -58.730],
+  zoom: 15,
+  streets: getMapDataForLocation('Garín', false)
+};
 ---
 
 <Layout title="Garín - Cambios de sentido de calles">
@@ -12,7 +19,7 @@ import { garinMapData } from '../data/geoJsonAdapter.js';
 			centerLat={garinMapData.center[0]}
 			centerLng={garinMapData.center[1]}
 			initialZoom={garinMapData.zoom}
-			mapData={garinMapData.streets}
+			mapData={garinMapData.streets || []}
 		/>
 		<h2>Garín</h2>
 		<p>

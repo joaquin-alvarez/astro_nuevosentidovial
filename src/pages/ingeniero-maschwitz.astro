@@ -1,7 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import LeafletMap from '../components/LeafletMap.astro';
-import { ingenieroMaschwitzMapData } from '../data/geoJsonAdapter.js';
+import { getMapDataForLocation } from '../data/geoJsonAdapter.js';
+
+// Obtener datos filtrados para Ingeniero Maschwitz (excluyendo las colectoras)
+const ingenieroMaschwitzMapData = {
+  center: [-34.386, -58.740],
+  zoom: 16,
+  streets: getMapDataForLocation('Ingeniero Maschwitz', false)
+};
 ---
 
 <Layout title="Ingeniero Maschwitz - Cambios de sentido de calles">
@@ -12,7 +19,7 @@ import { ingenieroMaschwitzMapData } from '../data/geoJsonAdapter.js';
 			centerLat={ingenieroMaschwitzMapData.center[0]}
 			centerLng={ingenieroMaschwitzMapData.center[1]}
 			initialZoom={ingenieroMaschwitzMapData.zoom}
-			mapData={ingenieroMaschwitzMapData.streets}
+			mapData={ingenieroMaschwitzMapData.streets || []}
 		/>
 		<h2>Ingeniero Maschwitz</h2>
 		<p>

@@ -1,24 +1,60 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import LeafletMap from '../components/LeafletMap.astro';
-import { colectorasMapData } from '../data/geoJsonAdapter.js';
+import { getMapDataForLocation } from '../data/geoJsonAdapter.js';
+
+// Obtener datos filtrados para colectoras de Belén de Escobar
+const belenColectorasData = {
+  center: [-34.342, -58.810],  // Centro para Belén de Escobar
+  zoom: 14,
+  streets: getMapDataForLocation('Belén de Escobar', true)
+};
+
+// Obtener datos filtrados para colectoras de Garín
+const garinColectorasData = {
+  center: [-34.417, -58.730],  // Centro para Garín
+  zoom: 14,
+  streets: getMapDataForLocation('Garín', true)
+};
 ---
 
 <Layout title="Cambios en Colectoras - Cambios de sentido de calles">
 	<section>
-		<LeafletMap 
-			mapId="mapa-colectoras" 
-			locationName="Colectoras"
-			centerLat={colectorasMapData.center[0]}
-			centerLng={colectorasMapData.center[1]}
-			initialZoom={colectorasMapData.zoom}
-			mapData={colectorasMapData.streets}
-		/>
 		<h2>Cambios en las Colectoras</h2>
 		<p>
 			Los cambios en las colectoras buscan mejorar la seguridad vial y la fluidez del tránsito en puntos críticos 
 			de las diferentes localidades.
 		</p>
+
+		<div class="colectora-maps-container">
+			<div class="colectora-map-section">
+				<h3>Colectoras en Belén de Escobar</h3>
+				<div class="colectora-map">
+					<LeafletMap 
+						mapId="mapa-colectoras-belen" 
+						locationName="Belén de Escobar - Colectoras"
+						centerLat={belenColectorasData.center[0]}
+						centerLng={belenColectorasData.center[1]}
+						initialZoom={belenColectorasData.zoom}
+						mapData={belenColectorasData.streets || []}
+					/>
+				</div>
+			</div>
+
+			<div class="colectora-map-section">
+				<h3>Colectoras en Garín</h3>
+				<div class="colectora-map">
+					<LeafletMap 
+						mapId="mapa-colectoras-garin" 
+						locationName="Garín - Colectoras"
+						centerLat={garinColectorasData.center[0]}
+						centerLng={garinColectorasData.center[1]}
+						initialZoom={garinColectorasData.zoom}
+						mapData={garinColectorasData.streets || []}
+					/>
+				</div>
+			</div>
+		</div>
 
 		<div class="collector-section">
 			<h3>Belén de Escobar</h3>
@@ -151,6 +187,43 @@ import { colectorasMapData } from '../data/geoJsonAdapter.js';
 
 	.collector-section:last-of-type {
 		border-bottom: none;
+	}
+
+	.colectora-maps-container {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		margin: 2rem 0;
+	}
+
+	.colectora-map-section {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.colectora-map-section h3 {
+		margin-bottom: 0.5rem;
+		color: var(--accent-dark);
+		font-size: 1.3rem;
+	}
+
+	.colectora-map {
+		height: 400px;
+		width: 100%;
+		border-radius: var(--radius);
+		overflow: hidden;
+		box-shadow: var(--shadow);
+	}
+
+	@media (min-width: 768px) {
+		.colectora-maps-container {
+			flex-direction: row;
+		}
+
+		.colectora-map-section {
+			flex: 1;
+		}
 	}
 
 	.info-box {

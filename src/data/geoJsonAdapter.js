@@ -2,11 +2,28 @@
 import streetChangesJson from './street_changes.json';
 
 // Función para convertir datos GeoJSON en el formato necesario para nuestros mapas
-export function getMapDataForLocation(locationName) {
+export function getMapDataForLocation(locationName, isColectoraMap = false) {
   // Filtrar características para la ubicación específica
-  const locationFeatures = streetChangesJson.features.filter(feature => 
-    feature.properties.location === locationName
-  );
+  const locationFeatures = streetChangesJson.features.filter(feature => {
+    // Primero filtramos por ubicación
+    const locationMatch = feature.properties.location === locationName;
+    
+    // Verificamos si el feature tiene coordenadas válidas
+    const hasValidGeometry = feature.geometry && feature.geometry.coordinates;
+    
+    // Si no hay geometría válida, no lo incluimos
+    if (!hasValidGeometry) {
+      return false;
+    }
+    
+    // Luego filtramos por la propiedad mostrar_en_colectora
+    if (isColectoraMap) {
+      return locationMatch && feature.properties.mostrar_en_colectora === true;
+    } else {
+      // Para mapas normales, mostrar los que NO son para colectora (null, false o undefined)
+      return locationMatch && feature.properties.mostrar_en_colectora !== true;
+    }
+  });
 
   // Convertir cada característica a nuestro formato de datos
   const streets = locationFeatures.map(feature => ({
