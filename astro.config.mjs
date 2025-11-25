@@ -5,7 +5,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
     output: 'static',
     site: 'https://escobar.gob.ar',
-    base: '/nuevosentidovial/',
+    base: '/nuevosentidovial',
     build: {
         assets: '_astro',
         inlineStylesheets: 'auto'
