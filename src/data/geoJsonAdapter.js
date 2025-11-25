@@ -13,11 +13,12 @@ export function getMapDataForLocation(locationName, isColectoraMap = false) {
     
     // Si no hay geometría válida, no lo incluimos
     if (!hasValidGeometry) {
+      console.log('No hay geometría válida para', feature.properties.name);
       return false;
     }
     
     // Luego filtramos por la propiedad mostrar_en_colectora
-    if (isColectoraMap) {
+    if (isColectoraMap) {;
       return locationMatch && feature.properties.mostrar_en_colectora === true;
     } else {
       // Para mapas normales, mostrar los que NO son para colectora (null, false o undefined)
