@@ -5,10 +5,23 @@ export interface Props {
   centerLat: number;
   centerLng: number;
   initialZoom: number;
+  minZoom?: number;
+  maxZoom?: number;
+  bounds?: [[number, number], [number, number]];
   mapData: any;
 }
 
-const { mapId, locationName, centerLat, centerLng, initialZoom, mapData } = Astro.props;
+const { 
+  mapId, 
+  locationName, 
+  centerLat, 
+  centerLng, 
+  initialZoom, 
+  minZoom = 13, 
+  maxZoom = 18, 
+  bounds = null, 
+  mapData 
+} = Astro.props;
 ---
 
 <div class="map-container">
@@ -34,7 +47,7 @@ const { mapId, locationName, centerLat, centerLng, initialZoom, mapData } = Astr
   </div>
 </div>
 
-<script define:vars={{ mapId, centerLat, centerLng, initialZoom, mapData }}>
+<script define:vars={{ mapId, centerLat, centerLng, initialZoom, minZoom, maxZoom, bounds, mapData }}>
   // Importar Leaflet solo en el lado del cliente
   document.addEventListener('DOMContentLoaded', async () => {
     // Cargar dinamicamente Leaflet desde CDN si no está ya cargado
@@ -60,29 +73,33 @@ const { mapId, locationName, centerLat, centerLng, initialZoom, mapData } = Astr
       document.head.appendChild(polylineDecoratorScript);
     });
     
-    // Inicializar el mapa
-    const map = L.map(mapId).setView([centerLat, centerLng], initialZoom);
-
-
-    // Agrega esto temporalmente a tu código
-map.on('moveend zoomend', function() {
-    var center = map.getCenter();
-    var zoom = map.getZoom();
-    var bounds = map.getBounds();
-    var southWest = bounds.getSouthWest();
-    var northEast = bounds.getNorthEast();
-
-    console.clear(); // Limpia la consola para no saturar
-    console.log("--- PARÁMETROS ACTUALES ---");
-    console.log(`Center: [${center.lat.toFixed(5)}, ${center.lng.toFixed(5)}]`);
-    console.log(`Zoom: ${zoom}`);
-    console.log(`Min/Max Bounds (Copiar esto):`);
-    console.log(`[
-      [${southWest.lat.toFixed(5)}, ${southWest.lng.toFixed(5)}], // SouthWest (Abajo-Izquierda)
-      [${northEast.lat.toFixed(5)}, ${northEast.lng.toFixed(5)}]  // NorthEast (Arriba-Derecha)
-    ]`);
-});
+    // Inicializar el mapa con las nuevas opciones
+    const map = L.map(mapId, {
+      center: [centerLat, centerLng],
+      zoom: initialZoom,
+      minZoom: minZoom,
+      maxZoom: maxZoom,
+      maxBounds: bounds ? L.latLngBounds(bounds) : null,
+    });
     
+    map.on('moveend zoomend', function() {
+        var center = map.getCenter();
+        var zoom = map.getZoom();
+        var bounds = map.getBounds();
+        var southWest = bounds.getSouthWest();
+        var northEast = bounds.getNorthEast();
+
+        console.clear(); // Limpia la consola para no saturar
+        console.log("--- PARÁMETROS ACTUALES ---");
+        console.log(`Center: [${center.lat.toFixed(5)}, ${center.lng.toFixed(5)}]`);
+        console.log(`Zoom: ${zoom}`);
+        console.log(`Min/Max Bounds (Copiar esto):`);
+        console.log(`[
+          [${southWest.lat.toFixed(5)}, ${southWest.lng.toFixed(5)}], // SouthWest (Abajo-Izquierda)
+          [${northEast.lat.toFixed(5)}, ${northEast.lng.toFixed(5)}]  // NorthEast (Arriba-Derecha)
+        ]`);
+    });
+
     // Agregar la capa base de OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -259,28 +276,40 @@ map.on('moveend zoomend', function() {
       clickablePath.bindPopup(popupContentEnhanced);
       
       // Agregar flechas de dirección usando PolylineDecorator
-      if (street.direction && street.direction !== 'none') {
-        let pattern;
+      if (street.direction && street.direction !== 'none' || street.type === 'doubleway') {
+        // Debug para verificar todos los tipos de calles y direcciones
+        console.log(`Procesando calle: ${street.name}, tipo: ${street.type}, dirección: ${street.direction}`);
         
+        // Mostrar explícitamente si la calle califica para flechas bidireccionales
+        const isBidirectional = street.type === 'doubleway' || street.direction === 'norte-sur' || street.direction === 'este-oeste';
+        console.log(`¿Es bidireccional? ${isBidirectional ? 'SÍ' : 'NO'}`);
+        
+        // Determinar la dirección de las flechas según el tipo de cambio
         if (street.type === 'doubleway' || street.direction === 'norte-sur' || street.direction === 'este-oeste') {
           // Para calles de doble sentido, usamos un estilo diferente
           if (street.type === 'doubleway') {
-            // Usar línea punteada para doble sentido en lugar de flechas
+            // Solo usar línea punteada para doble sentido, SIN flechas
             streetPath.setStyle({
               dashArray: '10, 10',  // Patrón de línea punteada
               weight: 8,  // Hacer la línea más gruesa
             });
             
-            // Agregar dos flechas opuestas en el centro
-            pattern = [
-              { offset: '40%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 18, pathOptions: { color: streetColor, fillOpacity: 1, weight: 3 } }) },
-              { offset: '60%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 18, pathOptions: { color: streetColor, fillOpacity: 1, weight: 3 }, heading: -180 }) }
-            ];
+            // No aplicar flechas para calles de doble sentido
+            pattern = []; // Patrón vacío, no se mostrarán flechas
+            console.log('Calle de doble sentido - usando solo línea punteada sin flechas:', street.name);
           } else {
-            // Para otras direcciones bidireccionales
+            // Para otras direcciones bidireccionales (norte-sur o este-oeste)
+            console.log(`Aplicando flechas bidireccionales para: ${street.name}, dirección: ${street.direction}`);
+            
+            // Usar estilo dashed también para mayor claridad en bidireccionales
+            streetPath.setStyle({
+              dashArray: '5, 10',  // Patrón de línea punteada más sutil
+              weight: 6,  // Hacer la línea más gruesa
+            });
+            
             pattern = [
-              { offset: '25%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { color: streetColor, fillOpacity: 1, weight: 2 } }) },
-              { offset: '75%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { color: streetColor, fillOpacity: 1, weight: 2 }, heading: -180 }) }
+              { offset: '30%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 18, pathOptions: { color: streetColor, fillOpacity: 1, weight: 3 } }) },
+              { offset: '70%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 18, pathOptions: { color: streetColor, fillOpacity: 1, weight: 3 }, heading: 180 }) }
             ];
           }
         } else {
@@ -290,11 +319,22 @@ map.on('moveend zoomend', function() {
           ];
         }
         
-        // Agregar las flechas pero asegurándonos que no interfieran con los clics
-        const decorator = L.polylineDecorator(streetPath, {
-          patterns: pattern,
-          interactive: false // Evitar que las flechas capturen eventos de clic
-        }).addTo(map);
+        // Solo agregar flechas si hay un patrón definido (no para calles tipo 'doubleway')
+        if (pattern.length > 0) {
+          // Agregar las flechas pero asegurándonos que no interfieran con los clics
+          const decorator = L.polylineDecorator(streetPath, {
+            patterns: pattern,
+            interactive: false, // Evitar que las flechas capturen eventos de clic
+            zIndex: 1000, // Asegurar que las flechas aparezcan encima de todas las capas
+            opacity: 1.0,
+            weight: 2
+          }).addTo(map);
+          
+          // Asegurarse de que el decorador está en la capa correcta y visible
+          console.log(`Decorador creado para ${street.name}:`, decorator);
+        } else {
+          console.log(`Sin decorador para calle de doble vía ${street.name} - solo estilo de línea`);
+        }
       }
     });
   });
@@ -324,7 +364,7 @@ map.on('moveend zoomend', function() {
     padding: 10px 15px;
     border-radius: var(--radius);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 500;
+    z-index: 10;
   }
   
   .map-legend h4 {

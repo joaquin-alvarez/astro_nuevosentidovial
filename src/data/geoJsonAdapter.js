@@ -17,12 +17,14 @@ export function getMapDataForLocation(locationName, isColectoraMap = false) {
       return false;
     }
     
-    // Luego filtramos por la propiedad mostrar_en_colectora
-    if (isColectoraMap) {;
+    // Luego filtramos por las propiedades mostrar_en_colectora y mostrar_en_normal
+    if (isColectoraMap) {
       return locationMatch && feature.properties.mostrar_en_colectora === true;
     } else {
-      // Para mapas normales, mostrar los que NO son para colectora (null, false o undefined)
-      return locationMatch && feature.properties.mostrar_en_colectora !== true;
+      // Para mapas normales, mostrar los que cumplan alguna de estas condiciones:
+      // 1. No son para colectora (mostrar_en_colectora es null, false o undefined)
+      // 2. Tienen la propiedad mostrar_en_normal explícitamente establecida como true
+      return locationMatch && (feature.properties.mostrar_en_colectora !== true || feature.properties.mostrar_en_normal === true);
     }
   });
 

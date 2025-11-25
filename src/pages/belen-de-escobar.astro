@@ -4,18 +4,28 @@ import LeafletMap from '../components/LeafletMap.astro';
 import { getMapDataForLocation } from '../data/geoJsonAdapter.js';
 
 // Obtener datos filtrados para Belén de Escobar (excluyendo las colectoras)
-const streets = getMapDataForLocation('Belén de Escobar', false);
+interface Street {
+  name: string;
+  type: string;
+  section: string;
+  newDirection: string | null;
+  direction: string | null;
+  details: string;
+  coordinates: number[][];
+}
+
+const streets: Street[] = getMapDataForLocation('Belén de Escobar', false);
 
 // Calcular centro basado en las calles
-function calculateCenter(streets) {
+function calculateCenter(streets: Street[]) {
   if (streets.length === 0) return [-34.342, -58.797]; // Valor por defecto para Belén de Escobar
   
   let totalLat = 0;
   let totalLng = 0;
   let pointCount = 0;
   
-  streets.forEach(street  => {
-    street.coordinates.forEach(coord => {
+  streets.forEach((street: Street)  => {
+    street.coordinates.forEach((coord: number[]) => {
       totalLat += coord[0]; // latitud
       totalLng += coord[1]; // longitud
       pointCount++;
@@ -27,6 +37,12 @@ function calculateCenter(streets) {
 
 const center = calculateCenter(streets);
 const zoom = 15;
+const minZoom = 14;
+const maxZoom = 18;
+const maxBounds: [[number, number], [number, number]] = [
+  [-34.355, -58.81],
+  [-34.33, -58.785]
+];
 ---
 
 <Layout title="Belén de Escobar - Cambios de sentido de calles">
@@ -37,6 +53,9 @@ const zoom = 15;
 			centerLat={center[0]}
 			centerLng={center[1]}
 			initialZoom={zoom}
+			minZoom={minZoom}
+			maxZoom={maxZoom}
+			bounds={maxBounds}
 			mapData={streets || []}
 		/>
 		<h2>Belén de Escobar</h2>
