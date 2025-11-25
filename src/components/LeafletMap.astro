@@ -62,6 +62,26 @@ const { mapId, locationName, centerLat, centerLng, initialZoom, mapData } = Astr
     
     // Inicializar el mapa
     const map = L.map(mapId).setView([centerLat, centerLng], initialZoom);
+
+
+    // Agrega esto temporalmente a tu código
+map.on('moveend zoomend', function() {
+    var center = map.getCenter();
+    var zoom = map.getZoom();
+    var bounds = map.getBounds();
+    var southWest = bounds.getSouthWest();
+    var northEast = bounds.getNorthEast();
+
+    console.clear(); // Limpia la consola para no saturar
+    console.log("--- PARÁMETROS ACTUALES ---");
+    console.log(`Center: [${center.lat.toFixed(5)}, ${center.lng.toFixed(5)}]`);
+    console.log(`Zoom: ${zoom}`);
+    console.log(`Min/Max Bounds (Copiar esto):`);
+    console.log(`[
+      [${southWest.lat.toFixed(5)}, ${southWest.lng.toFixed(5)}], // SouthWest (Abajo-Izquierda)
+      [${northEast.lat.toFixed(5)}, ${northEast.lng.toFixed(5)}]  // NorthEast (Arriba-Derecha)
+    ]`);
+});
     
     // Agregar la capa base de OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
