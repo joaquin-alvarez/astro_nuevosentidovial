@@ -25,36 +25,39 @@ import Layout from '../layouts/Layout.astro';
 </ul>
 		<div class="info-box">
 			<h4>Listados detallados de cambios</h4>
-			<p>
-				Para su mayor comodidad, toda la información sobre cambios de sentido se presenta en forma de listados
-				detallados, organizados por localidad y tipo de modificación. Cada cambio incluye la ubicación exacta,
-				el tramo afectado y la nueva dirección de circulación.
-			</p>
+			<div class="info-content">
+				<i class='bx bxs-info-circle info-icon'></i>
+				<p>
+					Para su mayor comodidad, toda la información sobre cambios de sentido se presenta en forma de listados
+					detallados, organizados por localidad y tipo de modificación. Cada cambio incluye la ubicación exacta,
+					el tramo afectado y la nueva dirección de circulación.
+				</p>
+			</div>
 		</div>
 
 		<div class="cards">
 			<div class="card">
 				<h3>Belén de Escobar</h3>
 				<p>El nuevo esquema reorganiza el tránsito en el casco céntrico, priorizando la circulación ordenada y segura alrededor de instituciones públicas, comercios y escuelas.</p>
-				<a href={`${import.meta.env.BASE_URL}belen-de-escobar`} class="btn">Ver detalles</a>
+				<a href={`${import.meta.env.BASE_URL}/belen-de-escobar`} class="btn">Ver detalles</a>
 			</div>
 
 			<div class="card">
 				<h3>Garín</h3>
 				<p>El plan redefine sentidos de circulación en el área central para mejorar la conexión entre el Boulevard Presidente Perón, la Colectora Oeste y las calles más transitadas.</p>
-				<a href={`${import.meta.env.BASE_URL}garin`} class="btn">Ver detalles</a>
+				<a href={`${import.meta.env.BASE_URL}/garin`} class="btn">Ver detalles</a>
 			</div>
 
 			<div class="card">
 				<h3>Ingeniero Maschwitz</h3>
 				<p>Las modificaciones apuntan a ordenar los ingresos y egresos del casco urbano, especialmente en zonas escolares y de alto tránsito.</p>
-				<a href={`${import.meta.env.BASE_URL}ingeniero-maschwitz`} class="btn">Ver detalles</a>
+				<a href={`${import.meta.env.BASE_URL}/ingeniero-maschwitz`} class="btn">Ver detalles</a>
 			</div>
 
 			<div class="card">
 				<h3>Cambios en Colectoras</h3>
 				<p>Información sobre los cambios en las colectoras de las diferentes localidades para evitar la doble circulación en puntos de alto flujo y riesgo vial.</p>
-				<a href={`${import.meta.env.BASE_URL}colectoras`} class="btn">Ver detalles</a>
+				<a href={`${import.meta.env.BASE_URL}/colectoras`} class="btn">Ver detalles</a>
 			</div>
 		</div>
 	</section>
@@ -71,32 +74,44 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	.list li {
-		padding: 0.85rem 1.25rem;
+		padding: 1rem 1.5rem;
 		background-color: var(--bg-card);
-		border-left: 4px solid var(--accent);
+		border-left: var(--card-border-width) solid var(--accent);
 		border-radius: var(--radius);
 		box-shadow: var(--shadow);
 		font-weight: 500;
 		line-height: 1.6;
-		color: #1f2933;
+		color: var(--text);
 		transition: var(--transition);
+		display: flex;
+		align-items: center;
+		position: relative;
 	}
 
 	.list li:hover {
-		transform: translateX(4px);
+		transform: translateX(6px);
 		box-shadow: var(--shadow-hover);
+	}
+
+	.list li::before {
+		content: '✓';
+		color: var(--accent);
+		font-weight: bold;
+		margin-right: 0.75rem;
+		font-size: 1.1rem;
 	}
 
 	.hero {
 		background: linear-gradient(135deg, var(--accent-dark), var(--accent));
 		color: white;
-		padding: 4rem 0;
+		padding: 4.5rem 0;
 		margin-bottom: 3rem;
 		border-radius: var(--radius);
 		text-align: center;
 		position: relative;
 		overflow: hidden;
 		box-shadow: var(--shadow);
+		border-bottom: 4px solid var(--secondary);
 	}
 
 	.hero::before {
@@ -168,6 +183,19 @@ import Layout from '../layouts/Layout.astro';
 		display: inline-block;
 		left: 50%;
 		transform: translateX(-50%);
+		padding-bottom: 0.75rem;
+	}
+
+	.section-title::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 80px;
+		height: 3px;
+		background: linear-gradient(90deg, var(--accent), var(--secondary));
+		border-radius: 2px;
 	}
 
 	.cards {
@@ -183,7 +211,7 @@ import Layout from '../layouts/Layout.astro';
 		padding: 2rem;
 		box-shadow: var(--shadow);
 		transition: var(--transition);
-		border-top: 4px solid var(--accent);
+		border-top: var(--card-border-width) solid var(--accent);
 		height: 100%;
 		display: flex;
 		flex-direction: column;
@@ -201,11 +229,11 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	.card:nth-child(3) {
-		border-top-color: #27ae60;
+		border-top-color: var(--green);
 	}
 
 	.card:nth-child(4) {
-		border-top-color: #8e44ad;
+		border-top-color: var(--purple);
 	}
 
 	.card::before {
@@ -251,11 +279,11 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	.card:nth-child(3) h3::after {
-		background: linear-gradient(90deg, #27ae60, #2ecc71);
+		background: linear-gradient(90deg, var(--green), #2ecc71);
 	}
 
 	.card:nth-child(4) h3::after {
-		background: linear-gradient(90deg, #8e44ad, #9b59b6);
+		background: linear-gradient(90deg, var(--purple), #9b59b6);
 	}
 
 	.card p {
@@ -284,12 +312,12 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	.card:nth-child(3) .btn {
-		background-color: #27ae60;
+		background-color: var(--green);
 		box-shadow: 0 4px 10px rgba(39, 174, 96, 0.2);
 	}
 
 	.card:nth-child(4) .btn {
-		background-color: #8e44ad;
+		background-color: var(--purple);
 		box-shadow: 0 4px 10px rgba(142, 68, 173, 0.2);
 	}
 
@@ -304,10 +332,12 @@ import Layout from '../layouts/Layout.astro';
 
 	.card:nth-child(3) .btn:hover {
 		box-shadow: 0 6px 12px rgba(39, 174, 96, 0.25);
+		background-color: #229954;
 	}
 
 	.card:nth-child(4) .btn:hover {
 		box-shadow: 0 6px 12px rgba(142, 68, 173, 0.25);
+		background-color: #7d3c98;
 	}
 
 	.btn::after {
@@ -345,5 +375,41 @@ import Layout from '../layouts/Layout.astro';
 		.cards {
 			gap: 1.5rem;
 		}
+	}
+
+	.info-box {
+		background-color: rgba(30, 136, 229, 0.08);
+		border-left: var(--card-border-width) solid var(--accent);
+		padding: 1.5rem;
+		margin: 2.25rem 0;
+		border-radius: 0 var(--radius) var(--radius) 0;
+		box-shadow: var(--shadow);
+		position: relative;
+		transition: var(--transition);
+	}
+
+	.info-box:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--shadow-hover);
+	}
+
+	.info-content {
+		display: flex;
+		align-items: flex-start;
+		gap: 1rem;
+	}
+
+	.info-icon {
+		color: var(--accent);
+		font-size: 1.5rem;
+		margin-top: 0.25rem;
+	}
+
+	.info-box h4 {
+		color: var(--accent-dark);
+		font-family: 'Outfit', sans-serif;
+		margin-bottom: 0.75rem;
+		font-size: 1.2rem;
+		font-weight: 600;
 	}
 </style>
