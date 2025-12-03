@@ -162,7 +162,7 @@ const {
         <div class="street-popup">
           <h3>${street.name}</h3>
           <p><strong>Tramo:</strong> ${street.section}</p>
-          <p><strong>Sentido:</strong> ${sentidoTexto}</p>
+          <p><strong>Sentido:</strong> ${street.newDirection}</p>
           ${street.details ? `<p>${street.details}</p>` : ''}
         </div>
       `;
@@ -344,7 +344,7 @@ const {
   .map-container {
     position: relative;
     width: 100%;
-    margin: 2rem 0;
+    margin: 0;
     border-radius: var(--radius);
     overflow: hidden;
     box-shadow: var(--shadow);

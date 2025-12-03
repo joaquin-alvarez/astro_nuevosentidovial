@@ -7,7 +7,7 @@ import { getMapDataForLocation } from '../data/geoJsonAdapter.js';
 const belenStreets = getMapDataForLocation('Belén de Escobar', true);
 
 // Calcular centro basado en las calles de Belén
-function calculateCenter(streets) {
+function calculateCenter(streets : Array<any>) {
   if (streets.length === 0) return [-34.342, -58.810]; // Valor por defecto 
   
   let totalLat = 0;
@@ -15,7 +15,7 @@ function calculateCenter(streets) {
   let pointCount = 0;
   
   streets.forEach(street => {
-    street.coordinates.forEach(coord => {
+    street.coordinates.forEach((coord : Array<number>) => {
       totalLat += coord[0]; // latitud
       totalLng += coord[1]; // longitud
       pointCount++;
