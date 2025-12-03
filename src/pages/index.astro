@@ -5,7 +5,7 @@ import Layout from '../layouts/Layout.astro';
 <Layout title="Cambios de sentido de calles - Información Oficial">
 	<section class="hero">
 		<div class="hero-content">
-			<h2>Cambios de sentido de calles</h2>
+			<h2>Calles de mano única y más lugar para estacionar</h2>
 			<p class="hero-text">
 				Bienvenido al sitio oficial de información sobre los cambios de sentido de calles
 				en las localidades de Belén de Escobar, Garín e Ingeniero Maschwitz.
@@ -16,12 +16,13 @@ import Layout from '../layouts/Layout.astro';
 	</section>
 
 	<section>
-		<h3 class="section-title">Información Detallada</h3>
-		<p>
-			Este sitio proporciona información detallada sobre las modificaciones en el sentido
-			de circulación de diversas calles en estas localidades, con el objetivo de mejorar
-			la fluidez del tránsito y aumentar la seguridad vial.
-		</p>
+		<h3 class="section-title">¿Por qué hacemos estos cambios?</h3>
+<ul class="list">
+	<li>Eliminación de calles de doble sentido que generaban embudos.</li>
+	<li>Se evita el estacionamiento indebido en ambos lados de la calzada.</li>
+	<li>Más de 80 cuadras del partido pasarán a ser de mano única.</li>
+	<li>Mayor fluidez al transitar y más espacios permitidos para estacionar.</li>
+</ul>
 		<div class="info-box">
 			<h4>Listados detallados de cambios</h4>
 			<p>
@@ -60,6 +61,32 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <style>
+	.list {
+		list-style-type: none;
+		padding: 0;
+		margin: 0 0 2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.list li {
+		padding: 0.85rem 1.25rem;
+		background-color: var(--bg-card);
+		border-left: 4px solid var(--accent);
+		border-radius: var(--radius);
+		box-shadow: var(--shadow);
+		font-weight: 500;
+		line-height: 1.6;
+		color: #1f2933;
+		transition: var(--transition);
+	}
+
+	.list li:hover {
+		transform: translateX(4px);
+		box-shadow: var(--shadow-hover);
+	}
+
 	.hero {
 		background: linear-gradient(135deg, var(--accent-dark), var(--accent));
 		color: white;
