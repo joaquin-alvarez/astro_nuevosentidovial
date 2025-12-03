@@ -174,49 +174,6 @@ const {
       const midpointIndex = Math.floor(street.coordinates.length / 2);
       const iconPosition = street.coordinates[midpointIndex];
       
-      // Extraer las calles de la descripción del tramo
-      const sectionParts = street.section.split(' ');
-      let calle1 = '', calle2 = '';
-      
-      // Intentar identificar las calles mencionadas en la descripción
-      if (street.section.toLowerCase().includes('entre')) {
-        const entreIndex = sectionParts.findIndex(word => word.toLowerCase() === 'entre');
-        if (entreIndex !== -1 && entreIndex + 1 < sectionParts.length) {
-          calle1 = sectionParts[entreIndex + 1];
-          // Buscar la segunda calle después de 'y'
-          const yIndex = sectionParts.findIndex((word, index) => index > entreIndex && (word.toLowerCase() === 'y' || word.toLowerCase() === 'e'));
-          if (yIndex !== -1 && yIndex + 1 < sectionParts.length) {
-            calle2 = sectionParts[yIndex + 1];
-          }
-        }
-      } else if (street.section.toLowerCase().includes('desde') || street.section.toLowerCase().includes('de')) {
-        const desdeIndex = sectionParts.findIndex(word => 
-          word.toLowerCase() === 'desde' || word.toLowerCase() === 'de');
-        if (desdeIndex !== -1 && desdeIndex + 1 < sectionParts.length) {
-          calle1 = sectionParts[desdeIndex + 1];
-          // Buscar la segunda calle después de 'hasta' o 'a'
-          const hastaIndex = sectionParts.findIndex((word, index) => 
-            index > desdeIndex && (word.toLowerCase() === 'hasta' || word.toLowerCase() === 'a'));
-          if (hastaIndex !== -1 && hastaIndex + 1 < sectionParts.length) {
-            calle2 = sectionParts[hastaIndex + 1];
-          }
-        }
-      }
-      
-      // Si no se pudo identificar, usar valores genéricos
-      if (!calle1) calle1 = 'primera calle';
-      if (!calle2) calle2 = 'segunda calle';
-      
-      // Crear un texto descriptivo más claro para el sentido
-      let sentidoDetallado = '';
-      if (street.type === 'change') {
-        sentidoDetallado = `de ${calle1} hacia ${calle2}. Ahora circulación en un solo sentido`;
-      } else if (street.type === 'doubleway') {
-        sentidoDetallado = `Doble sentido entre ${calle1} y ${calle2}`;
-      } else if (street.type === 'noparking') {
-        sentidoDetallado = `Prohibido estacionar entre ${calle1} y ${calle2}`;
-      }
-      
       // Crear el badge para el tipo de cambio
       let badgeClass = '';
       let badgeText = '';
@@ -256,8 +213,8 @@ const {
         badgeStyle = 'display:inline-block;padding: 0.25rem 0.5rem;border-radius:.5em;color:white;font-size:12px;font-weight:bold;margin-bottom:8px;background-color:#e74c3c;';
       }
       
-      // Determinar si mostrar o no la línea de sentido (no mostrar para prohibido estacionar)
-      const sentidoLine = street.type === 'noparking' ? '' : `<p><strong>Sentido:</strong> ${sentidoDetallado}</p>`;
+      // Mostrar la dirección proporcionada por el JSON si está disponible
+      const sentidoLine = street.newDirection ? `<p><strong>Sentido:</strong> ${street.newDirection}</p>` : '';
       
       // Crear un popup mejorado con badges usando estilos inline
       const popupContentEnhanced = `
