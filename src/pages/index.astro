@@ -34,6 +34,29 @@ import Layout from '../layouts/Layout.astro';
 				</p>
 			</div>
 		</div>
+		
+		<h3 class="section-title">Cambios en la forma de estacionar</h3>
+		<div class="parking-regulation-box">
+			<div class="parking-content">
+				<p class="parking-main-rule">
+					Se elimina el estacionamiento a 45° en todo el partido. A partir de la nueva reglamentación, 
+					el estacionamiento deberá realizarse de manera paralela al cordón.
+				</p>
+				
+				<h4>Excepciones:</h4>
+				<p>Se mantiene el estacionamiento a 45° únicamente en calles que cuentan con dársenas especialmente diseñadas para ese fin, como por ejemplo:</p>
+				
+				<ul class="exception-list">
+					<li>Estrada, entre Hipólito Yrigoyen y Asborno</li>
+					<li>Independencia, entre Spadaccini y Dr. Travi</li>
+				</ul>
+				
+				<div class="benefit-note">
+					<i class='bx bxs-check-shield benefit-icon'></i>
+					<p>Esta medida busca mejorar la circulación, optimizar el uso del espacio público y reforzar la seguridad vial.</p>
+				</div>
+			</div>
+		</div>
 
 		<div class="cards">
 			<div class="card">
@@ -375,6 +398,14 @@ import Layout from '../layouts/Layout.astro';
 		.cards {
 			gap: 1.5rem;
 		}
+
+		.parking-regulation-box {
+			padding: 1.25rem;
+		}
+
+		.exception-list li {
+			padding: 0.75rem 1rem;
+		}
 	}
 
 	.info-box {
@@ -411,5 +442,77 @@ import Layout from '../layouts/Layout.astro';
 		margin-bottom: 0.75rem;
 		font-size: 1.2rem;
 		font-weight: 600;
+	}
+
+	/* Parking Regulation Styles */
+	.parking-regulation-box {
+		background-color: rgba(39, 174, 96, 0.08);
+		border-radius: var(--radius);
+		padding: 1.75rem;
+		margin: 2.5rem 0 3rem;
+		box-shadow: var(--shadow);
+		border-left: var(--card-border-width) solid var(--green);
+		transition: var(--transition);
+	}
+
+	.parking-regulation-box:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--shadow-hover);
+	}
+
+	.parking-content h4 {
+		color: var(--green);
+		font-family: 'Outfit', sans-serif;
+		font-size: 1.2rem;
+		font-weight: 600;
+		margin: 1.5rem 0 0.5rem;
+	}
+
+	.parking-main-rule {
+		font-size: 1.1rem;
+		font-weight: 500;
+		line-height: 1.7;
+		color: var(--text);
+		margin-bottom: 1rem;
+	}
+
+	.exception-list {
+		list-style-type: none;
+		padding: 0;
+		margin: 1.25rem 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.exception-list li {
+		padding: 0.85rem 1.25rem;
+		background-color: var(--bg-card);
+		border-left: 3px solid var(--green);
+		border-radius: var(--radius);
+		font-weight: 500;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+		transition: var(--transition);
+	}
+
+	.exception-list li:hover {
+		transform: translateX(5px);
+		box-shadow: var(--shadow-hover);
+	}
+
+	.benefit-note {
+		display: flex;
+		align-items: flex-start;
+		gap: 1rem;
+		margin-top: 1.5rem;
+		padding: 1rem;
+		background-color: rgba(255, 255, 255, 0.6);
+		border-radius: var(--radius);
+	}
+
+	.benefit-icon {
+		color: var(--green);
+		font-size: 1.5rem;
+		margin-top: 0.25rem;
 	}
 </style>
