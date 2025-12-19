@@ -2,20 +2,21 @@
 import Layout from '../layouts/Layout.astro';
 import LeafletMap from '../components/LeafletMap.astro';
 import { getMapDataForLocation } from '../data/geoJsonAdapter.js';
+import type { Street } from '../pages/belen-de-escobar.astro';
 
 // Obtener datos filtrados para Garín (excluyendo las colectoras)
 const streets = getMapDataForLocation('Garín', false);
 
 // Calcular centro basado en las calles
-function calculateCenter(streets) {
+function calculateCenter(streets : Street[]) {
   if (streets.length === 0) return [-34.417, -58.730]; // Valor por defecto para Garín
   
   let totalLat = 0;
   let totalLng = 0;
   let pointCount = 0;
   
-  streets.forEach(street => {
-    street.coordinates.forEach(coord => {
+  streets.forEach((street : Street) => {
+    street.coordinates.forEach((coord : number[]) => {
       totalLat += coord[0]; // latitud
       totalLng += coord[1]; // longitud
       pointCount++;
@@ -195,6 +196,18 @@ const zoom = 15;
 
 	.benefits-list li strong {
 		color: var(--accent-dark);
+	}
+
+	h2 {
+		margin-bottom: 1.5rem;
+		margin-top: 2.25rem;
+	}
+
+	h2 + p {
+		font-size: 1.1rem;
+		line-height: 1.7;
+		color: var(--text-light);
+		max-width: 700px;
 	}
 
 	.info-box {

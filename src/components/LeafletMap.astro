@@ -28,19 +28,19 @@ const {
   <div id={mapId} class="map"></div>
   <div class="map-legend">
     <h4>Cambios de sentido en {locationName}</h4>
-    <div class="legend-item">
+    <div class="legend-item" id="change-legend-item">
       <span class="legend-color change-direction"></span>
       <span>Cambio de sentido</span>
     </div>
-    <div class="legend-item">
+    <div class="legend-item" id="doubleway-legend-item">
       <span class="legend-color double-way"></span>
       <span>Doble sentido</span>
     </div>
-    <div class="legend-item">
+    <div class="legend-item" id="noparking-legend-item">
       <span class="legend-color no-parking"></span>
       <span>Prohibido estacionar</span>
     </div>
-    <div class="legend-item">
+    <div class="legend-item" id="direction-legend-item">
       <span class="legend-icon">↑</span>
       <span>Dirección de circulación</span>
     </div>
@@ -82,6 +82,22 @@ const {
       maxBounds: bounds ? L.latLngBounds(bounds) : null,
     });
     
+    // Variables para seguimiento de tipos visibles
+    let visibleTypes = {
+      change: false,
+      doubleway: false,
+      noparking: false,
+      hasArrows: false
+    };
+    
+    // Variables para seguimiento de tipos existentes en los datos
+    let existingTypes = {
+      change: false,
+      doubleway: false,
+      noparking: false,
+      hasArrows: false
+    };
+    
     map.on('moveend zoomend', function() {
         var center = map.getCenter();
         var zoom = map.getZoom();
@@ -98,6 +114,9 @@ const {
           [${southWest.lat.toFixed(5)}, ${southWest.lng.toFixed(5)}], // SouthWest (Abajo-Izquierda)
           [${northEast.lat.toFixed(5)}, ${northEast.lng.toFixed(5)}]  // NorthEast (Arriba-Derecha)
         ]`);
+        
+        // Actualizar leyenda según elementos visibles
+        updateLegendVisibility();
     });
 
     // Agregar la capa base de OpenStreetMap
@@ -128,6 +147,102 @@ const {
     }
     // Asegurarnos que mapData sea un array válido
     const streetData = Array.isArray(mapData) ? mapData : [];
+    
+    // Función para determinar qué tipos existen en los datos
+    function checkExistingTypes() {
+      // Resetear tipos existentes
+      existingTypes = {
+        change: false,
+        doubleway: false,
+        noparking: false,
+        hasArrows: false
+      };
+      
+      // Verificar qué tipos están presentes en los datos
+      streetData.forEach(street => {
+        if (street.type === 'change') existingTypes.change = true;
+        if (street.type === 'doubleway') existingTypes.doubleway = true;
+        if (street.type === 'noparking') existingTypes.noparking = true;
+        
+        // Verificar si hay flechas de dirección
+        if (street.direction && street.direction !== 'none' && street.type !== 'doubleway') {
+          existingTypes.hasArrows = true;
+        }
+      });
+      
+      console.log('Tipos existentes en los datos:', existingTypes);
+    }
+    
+    // Función para actualizar la visibilidad de la leyenda
+    function updateLegendVisibility() {
+      // Resetear visibilidad
+      visibleTypes = {
+        change: false,
+        doubleway: false,
+        noparking: false,
+        hasArrows: false
+      };
+      
+      // Comprobar qué tipos de elementos están visibles en la vista actual
+      const currentBounds = map.getBounds();
+      
+      streetData.forEach(street => {
+        // Verificar si al menos un punto de la calle está en la vista actual
+        for (let i = 0; i < street.coordinates.length; i++) {
+          const point = L.latLng(street.coordinates[i][0], street.coordinates[i][1]);
+          if (currentBounds.contains(point)) {
+            // Marcar el tipo como visible
+            if (street.type === 'change') visibleTypes.change = true;
+            if (street.type === 'doubleway') visibleTypes.doubleway = true;
+            if (street.type === 'noparking') visibleTypes.noparking = true;
+            
+            // Verificar si hay flechas de dirección
+            if (street.direction && street.direction !== 'none' && street.type !== 'doubleway') {
+              visibleTypes.hasArrows = true;
+            }
+            break; // Un punto es suficiente para marcar el tipo como visible
+          }
+        }
+      });
+      
+      // Actualizar la visibilidad de los elementos de la leyenda
+      // Solo mostrar tipos que existen en los datos Y están actualmente visibles
+      document.getElementById('change-legend-item').classList.toggle('hidden', !visibleTypes.change || !existingTypes.change);
+      document.getElementById('doubleway-legend-item').classList.toggle('hidden', !visibleTypes.doubleway || !existingTypes.doubleway);
+      document.getElementById('noparking-legend-item').classList.toggle('hidden', !visibleTypes.noparking || !existingTypes.noparking);
+      document.getElementById('direction-legend-item').classList.toggle('hidden', !visibleTypes.hasArrows || !existingTypes.hasArrows);
+      
+      console.log('Tipos visibles en la vista actual:', visibleTypes);
+    }
+    
+    // Verificar qué tipos existen en el mapa
+    function checkExistingTypes() {
+      // Inicializar todos como falsos
+      existingTypes = {
+        change: false,
+        doubleway: false,
+        noparking: false,
+        hasArrows: false
+      };
+      
+      // Recorrer todos los datos para ver qué tipos existen
+      streetData.forEach(street => {
+        if (street.type === 'change') existingTypes.change = true;
+        if (street.type === 'doubleway') existingTypes.doubleway = true;
+        if (street.type === 'noparking') existingTypes.noparking = true;
+        
+        // Verificar si hay calles con flechas de dirección
+        if (street.direction && street.direction !== 'none' && street.type !== 'doubleway') {
+          existingTypes.hasArrows = true;
+        }
+      });
+      
+      console.log('Tipos existentes en los datos:', existingTypes);
+    }
+    
+    // Ejecutar verificación inicial
+    checkExistingTypes();
+    
     // Agregar líneas para las calles con cambios
     streetData.forEach(street => {
       // Obtener el color basado en el tipo de calle
@@ -294,6 +409,18 @@ const {
         }
       }
     });
+    
+    // Verificar qué tipos existen en los datos
+    checkExistingTypes();
+    
+    // Actualizar la leyenda inicialmente
+    updateLegendVisibility();
+    
+    // Ocultar inmediatamente los tipos que no existen en los datos
+    if (!existingTypes.change) document.getElementById('change-legend-item').classList.add('hidden');
+    if (!existingTypes.doubleway) document.getElementById('doubleway-legend-item').classList.add('hidden');
+    if (!existingTypes.noparking) document.getElementById('noparking-legend-item').classList.add('hidden');
+    if (!existingTypes.hasArrows) document.getElementById('direction-legend-item').classList.add('hidden');
   });
 </script>
 
@@ -322,6 +449,10 @@ const {
     border-radius: var(--radius);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     z-index: 10;
+  }
+  
+  .legend-item.hidden {
+    display: none;
   }
   
   .map-legend h4 {
@@ -461,7 +592,7 @@ const {
   /* Responsive */
   @media (max-width: 768px) {
     .map {
-      height: 400px;
+      height: 450px; /* Increased height for mobile */
     }
     
     .map-legend {

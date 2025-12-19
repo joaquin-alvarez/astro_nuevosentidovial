@@ -4,7 +4,7 @@ import LeafletMap from '../components/LeafletMap.astro';
 import { getMapDataForLocation } from '../data/geoJsonAdapter.js';
 
 // Obtener datos filtrados para Belén de Escobar (excluyendo las colectoras)
-interface Street {
+export interface Street {
   name: string;
   type: string;
   section: string;
@@ -288,6 +288,7 @@ const maxBounds: [[number, number], [number, number]] = [
 
 	h2 {
 		margin-bottom: 1.5rem;
+		margin-top: 2.25rem;
 	}
 
 	h2 + p {
