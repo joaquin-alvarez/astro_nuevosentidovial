@@ -1,31 +1,18 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import LeafletMap from '../components/LeafletMap.astro';
-import { getMapDataForLocation } from '../data/geoJsonAdapter.js';
+import { getMapDataForLocation } from '../data/geoJsonAdapter.ts';
+import type { Street } from '../data/types';
+import { StreetUtils } from '../data/types';
 
 // Obtener datos filtrados para Ingeniero Maschwitz (excluyendo las colectoras)
-const streets = getMapDataForLocation('Ingeniero Maschwitz', false);
+const streets: Street[] = getMapDataForLocation('Ingeniero Maschwitz', false);
 
-// Calcular centro basado en las calles
-function calculateCenter(streets) {
-  if (streets.length === 0) return [-34.386, -58.740]; // Valor por defecto para Ingeniero Maschwitz
-  
-  let totalLat = 0;
-  let totalLng = 0;
-  let pointCount = 0;
-  
-  streets.forEach(street => {
-    street.coordinates.forEach(coord => {
-      totalLat += coord[0]; // latitud
-      totalLng += coord[1]; // longitud
-      pointCount++;
-    });
-  });
-  
-  return [totalLat / pointCount, totalLng / pointCount];
-}
+// Valores por defecto para Ingeniero Maschwitz
+const defaultCenter: [number, number] = [-34.386, -58.740];
 
-const center = calculateCenter(streets);
+// Usar la clase de utilidad para calcular el centro
+const center = StreetUtils.calculateCenter(streets, defaultCenter);
 const zoom = 16;
 ---
 

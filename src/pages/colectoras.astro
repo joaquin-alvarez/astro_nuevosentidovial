@@ -1,36 +1,28 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import LeafletMap from '../components/LeafletMap.astro';
-import { getMapDataForLocation } from '../data/geoJsonAdapter.js';
+import { getMapDataForLocation } from '../data/geoJsonAdapter.ts';
+import type { Street } from '../data/types';
+import { StreetUtils } from '../data/types';
 
 // Obtener datos filtrados para colectoras de Belén de Escobar
-const belenStreets = getMapDataForLocation('Belén de Escobar', true);
+const belenStreets: Street[] = getMapDataForLocation('Belén de Escobar', true);
 
-// Calcular centro basado en las calles de Belén
-function calculateCenter(streets : Array<any>) {
-  if (streets.length === 0) return [-34.342, -58.810]; // Valor por defecto 
-  
-  let totalLat = 0;
-  let totalLng = 0;
-  let pointCount = 0;
-  
-  streets.forEach(street => {
-    street.coordinates.forEach((coord : Array<number>) => {
-      totalLat += coord[0]; // latitud
-      totalLng += coord[1]; // longitud
-      pointCount++;
-    });
-  });
-  
-  return [totalLat / pointCount, totalLng / pointCount];
-}
+// Valores por defecto para Belén de Escobar (colectoras)
+const belenDefaultCenter: [number, number] = [-34.342, -58.810];
 
-const belenCenter = calculateCenter(belenStreets);
+// Usar la clase de utilidad para calcular el centro
+const belenCenter = StreetUtils.calculateCenter(belenStreets, belenDefaultCenter);
 const belenZoom = 14;
 
 // Obtener datos filtrados para colectoras de Garín
-const garinStreets = getMapDataForLocation('Garín', true);
-const garinCenter = calculateCenter(garinStreets);
+const garinStreets: Street[] = getMapDataForLocation('Garín', true);
+
+// Valores por defecto para Garín (colectoras)
+const garinDefaultCenter: [number, number] = [-34.417, -58.730];
+
+// Usar la clase de utilidad para calcular el centro
+const garinCenter = StreetUtils.calculateCenter(garinStreets, garinDefaultCenter);
 const garinZoom = 15;
 ---
 

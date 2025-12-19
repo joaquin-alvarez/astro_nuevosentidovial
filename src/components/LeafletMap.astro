@@ -1,4 +1,6 @@
 ---
+import type { Street } from '../data/types';
+
 export interface Props {
   mapId: string;
   locationName: string;
@@ -8,7 +10,7 @@ export interface Props {
   minZoom?: number;
   maxZoom?: number;
   bounds?: [[number, number], [number, number]];
-  mapData: any;
+  mapData: Street[];
 }
 
 const { 

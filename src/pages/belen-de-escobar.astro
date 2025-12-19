@@ -1,41 +1,18 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import LeafletMap from '../components/LeafletMap.astro';
-import { getMapDataForLocation } from '../data/geoJsonAdapter.js';
+import { getMapDataForLocation } from '../data/geoJsonAdapter.ts';
+import type { Street } from '../data/types';
+import { StreetUtils } from '../data/types';
 
 // Obtener datos filtrados para Belén de Escobar (excluyendo las colectoras)
-export interface Street {
-  name: string;
-  type: string;
-  section: string;
-  newDirection: string | null;
-  direction: string | null;
-  details: string;
-  coordinates: number[][];
-}
-
 const streets: Street[] = getMapDataForLocation('Belén de Escobar', false);
 
-// Calcular centro basado en las calles
-function calculateCenter(streets: Street[]) {
-  if (streets.length === 0) return [-34.342, -58.797]; // Valor por defecto para Belén de Escobar
-  
-  let totalLat = 0;
-  let totalLng = 0;
-  let pointCount = 0;
-  
-  streets.forEach((street: Street)  => {
-    street.coordinates.forEach((coord: number[]) => {
-      totalLat += coord[0]; // latitud
-      totalLng += coord[1]; // longitud
-      pointCount++;
-    });
-  });
-  
-  return [totalLat / pointCount, totalLng / pointCount];
-}
+// Valores por defecto para Belén de Escobar
+const defaultCenter: [number, number] = [-34.342, -58.797];
 
-const center = calculateCenter(streets);
+// Usar la clase de utilidad para calcular el centro
+const center = StreetUtils.calculateCenter(streets, defaultCenter);
 const zoom = 15;
 const minZoom = 14;
 const maxZoom = 18;
