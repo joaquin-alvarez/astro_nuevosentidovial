@@ -14,12 +14,6 @@ const defaultCenter: [number, number] = [-34.342, -58.797];
 // Usar la clase de utilidad para calcular el centro
 const center = StreetUtils.calculateCenter(streets, defaultCenter);
 const zoom = 15;
-const minZoom = 14;
-const maxZoom = 18;
-const maxBounds: [[number, number], [number, number]] = [
-  [-34.355, -58.81],
-  [-34.33, -58.785]
-];
 ---
 
 <Layout title="Belén de Escobar - Cambios de sentido de calles">
@@ -30,9 +24,6 @@ const maxBounds: [[number, number], [number, number]] = [
 			centerLat={center[0]}
 			centerLng={center[1]}
 			initialZoom={zoom}
-			minZoom={minZoom}
-			maxZoom={maxZoom}
-			bounds={maxBounds}
 			mapData={streets || []}
 		/>
 		<h2>Belén de Escobar</h2>

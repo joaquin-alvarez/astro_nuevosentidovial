@@ -11,6 +11,7 @@ export interface Props {
   maxZoom?: number;
   bounds?: [[number, number], [number, number]];
   mapData: Street[];
+  showLegend?: boolean;
 }
 
 const { 
@@ -22,31 +23,34 @@ const {
   minZoom = 13, 
   maxZoom = 18, 
   bounds = null, 
-  mapData 
+  mapData,
+  showLegend = true
 } = Astro.props;
 ---
 
 <div class="map-container">
   <div id={mapId} class="map"></div>
-  <div class="map-legend">
-    <h4>Cambios de sentido en {locationName}</h4>
-    <div class="legend-item" id="change-legend-item">
-      <span class="legend-color change-direction"></span>
-      <span>Cambio de sentido</span>
+  {showLegend && (
+    <div class="map-legend">
+      <h4>Cambios de sentido en {locationName}</h4>
+      <div class="legend-item" id="change-legend-item">
+        <span class="legend-color change-direction"></span>
+        <span>Cambio de sentido</span>
+      </div>
+      <div class="legend-item" id="doubleway-legend-item">
+        <span class="legend-color double-way"></span>
+        <span>Doble sentido</span>
+      </div>
+      <div class="legend-item" id="noparking-legend-item">
+        <span class="legend-color no-parking"></span>
+        <span>Prohibido estacionar</span>
+      </div>
+      <div class="legend-item" id="direction-legend-item">
+        <span class="legend-icon">↑</span>
+        <span>Dirección de circulación</span>
+      </div>
     </div>
-    <div class="legend-item" id="doubleway-legend-item">
-      <span class="legend-color double-way"></span>
-      <span>Doble sentido</span>
-    </div>
-    <div class="legend-item" id="noparking-legend-item">
-      <span class="legend-color no-parking"></span>
-      <span>Prohibido estacionar</span>
-    </div>
-    <div class="legend-item" id="direction-legend-item">
-      <span class="legend-icon">↑</span>
-      <span>Dirección de circulación</span>
-    </div>
-  </div>
+  )}
 </div>
 
 <script define:vars={{ mapId, centerLat, centerLng, initialZoom, minZoom, maxZoom, bounds, mapData }}>
@@ -100,6 +104,9 @@ const {
       hasArrows: false
     };
     
+    // Array para almacenar todas las polylines para actualizar su ancho en zoom
+    const polylines = [];
+    
     map.on('moveend zoomend', function() {
         var center = map.getCenter();
         var zoom = map.getZoom();
@@ -111,14 +118,18 @@ const {
         console.log("--- PARÁMETROS ACTUALES ---");
         console.log(`Center: [${center.lat.toFixed(5)}, ${center.lng.toFixed(5)}]`);
         console.log(`Zoom: ${zoom}`);
-        console.log(`Min/Max Bounds (Copiar esto):`);
-        console.log(`[
+        console.log(`Bounds: [
           [${southWest.lat.toFixed(5)}, ${southWest.lng.toFixed(5)}], // SouthWest (Abajo-Izquierda)
           [${northEast.lat.toFixed(5)}, ${northEast.lng.toFixed(5)}]  // NorthEast (Arriba-Derecha)
         ]`);
         
         // Actualizar leyenda según elementos visibles
         updateLegendVisibility();
+        
+        // Actualizar el ancho de todas las líneas según el nivel de zoom
+        polylines.forEach(polyline => {
+            updateLineWidthBasedOnZoom(polyline, zoom);
+        });
     });
 
     // Agregar la capa base de OpenStreetMap
@@ -147,6 +158,25 @@ const {
         default: return '#FF8A65';
       }
     }
+    
+    // Función para actualizar el ancho de línea según el nivel de zoom
+    function updateLineWidthBasedOnZoom(polyline, zoomLevel) {
+      let baseWidth = 6; // Ancho base
+      
+      // Ajustar el ancho según el nivel de zoom
+      if (zoomLevel <= 14) {
+        polyline.setStyle({ weight: baseWidth * 0.7 });
+      } else if (zoomLevel === 15) {
+        polyline.setStyle({ weight: baseWidth * 0.85 });
+      } else if (zoomLevel === 16) {
+        polyline.setStyle({ weight: baseWidth });
+      } else if (zoomLevel === 17) {
+        polyline.setStyle({ weight: baseWidth * 1.2 });
+      } else if (zoomLevel >= 18) {
+        polyline.setStyle({ weight: baseWidth * 1.4 });
+      }
+    }
+    
     // Asegurarnos que mapData sea un array válido
     const streetData = Array.isArray(mapData) ? mapData : [];
     
@@ -207,12 +237,22 @@ const {
         }
       });
       
-      // Actualizar la visibilidad de los elementos de la leyenda
+      // Actualizar la visibilidad de los elementos de la leyenda solo si existen
       // Solo mostrar tipos que existen en los datos Y están actualmente visibles
-      document.getElementById('change-legend-item').classList.toggle('hidden', !visibleTypes.change || !existingTypes.change);
-      document.getElementById('doubleway-legend-item').classList.toggle('hidden', !visibleTypes.doubleway || !existingTypes.doubleway);
-      document.getElementById('noparking-legend-item').classList.toggle('hidden', !visibleTypes.noparking || !existingTypes.noparking);
-      document.getElementById('direction-legend-item').classList.toggle('hidden', !visibleTypes.hasArrows || !existingTypes.hasArrows);
+      const changeEl = document.getElementById('change-legend-item');
+      const doubleWayEl = document.getElementById('doubleway-legend-item');
+      const noParkingEl = document.getElementById('noparking-legend-item');
+      const directionEl = document.getElementById('direction-legend-item');
+      
+      if (changeEl) changeEl.classList.toggle('hidden', !visibleTypes.change || !existingTypes.change);
+      if (doubleWayEl) doubleWayEl.classList.toggle('hidden', !visibleTypes.doubleway || !existingTypes.doubleway);
+      if (noParkingEl) noParkingEl.classList.toggle('hidden', !visibleTypes.noparking || !existingTypes.noparking);
+      if (directionEl) directionEl.classList.toggle('hidden', !visibleTypes.hasArrows || !existingTypes.hasArrows);
+      
+      // Ensure line widths update correctly when zooming
+      polylines.forEach(polyline => {
+        updateLineWidthBasedOnZoom(polyline, map.getZoom());
+      });
       
       console.log('Tipos visibles en la vista actual:', visibleTypes);
     }
@@ -263,6 +303,9 @@ const {
         weight: 6,
         opacity: 0.8
       }).addTo(map);
+      
+      // Añadir al array de polylines para actualizar en zoom
+      polylines.push(streetPath);
       
       // Preparar texto para el popup con mejor descripción del sentido
       let sentidoTexto = '';

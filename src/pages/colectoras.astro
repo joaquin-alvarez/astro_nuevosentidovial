@@ -14,12 +14,6 @@ const belenDefaultCenter: [number, number] = [-34.342, -58.810];
 // Usar la clase de utilidad para calcular el centro
 const belenCenter = StreetUtils.calculateCenter(belenStreets, belenDefaultCenter);
 const belenZoom = 14;
-const belenMinZoom = 13;
-const belenMaxZoom = 18;
-const belenMaxBounds: [[number, number], [number, number]] = [
-  [-34.355, -58.825],
-  [-34.330, -58.795]
-];
 
 // Obtener datos filtrados para colectoras de Garín
 const garinStreets: Street[] = getMapDataForLocation('Garín', true);
@@ -30,12 +24,6 @@ const garinDefaultCenter: [number, number] = [-34.417, -58.730];
 // Usar la clase de utilidad para calcular el centro
 const garinCenter = StreetUtils.calculateCenter(garinStreets, garinDefaultCenter);
 const garinZoom = 15;
-const garinMinZoom = 14;
-const garinMaxZoom = 18;
-const garinMaxBounds: [[number, number], [number, number]] = [
-  [-34.430, -58.745],
-  [-34.405, -58.715]
-];
 ---
 
 <Layout title="Cambios en Colectoras - Cambios de sentido de calles">
@@ -56,10 +44,8 @@ const garinMaxBounds: [[number, number], [number, number]] = [
 						centerLat={belenCenter[0]}
 						centerLng={belenCenter[1]}
 						initialZoom={belenZoom}
-						minZoom={belenMinZoom}
-						maxZoom={belenMaxZoom}
-						bounds={belenMaxBounds}
 						mapData={belenStreets || []}
+						showLegend={false}
 					/>
 				</div>
 			</div>
@@ -73,10 +59,8 @@ const garinMaxBounds: [[number, number], [number, number]] = [
 						centerLat={garinCenter[0]}
 						centerLng={garinCenter[1]}
 						initialZoom={garinZoom}
-						minZoom={garinMinZoom}
-						maxZoom={garinMaxZoom}
-						bounds={garinMaxBounds}
 						mapData={garinStreets || []}
+						showLegend={false}
 					/>
 				</div>
 			</div>
@@ -342,5 +326,10 @@ const garinMaxBounds: [[number, number], [number, number]] = [
 		.street-list {
 			grid-template-columns: 1fr;
 		}
+	}
+	/* Hide legends for Colectoras maps */	
+	:global(#mapa-colectoras-belen .map-legend),
+	:global(#mapa-colectoras-garin .map-legend) {
+		display: none !important;
 	}
 </style>
