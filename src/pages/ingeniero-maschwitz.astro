@@ -14,6 +14,12 @@ const defaultCenter: [number, number] = [-34.386, -58.740];
 // Usar la clase de utilidad para calcular el centro
 const center = StreetUtils.calculateCenter(streets, defaultCenter);
 const zoom = 16;
+const minZoom = 15;
+const maxZoom = 18;
+const maxBounds: [[number, number], [number, number]] = [
+  [-34.395, -58.750],
+  [-34.375, -58.730]
+];
 ---
 
 <Layout title="Ingeniero Maschwitz - Cambios de sentido de calles">
@@ -24,6 +30,9 @@ const zoom = 16;
 			centerLat={center[0]}
 			centerLng={center[1]}
 			initialZoom={zoom}
+			minZoom={minZoom}
+			maxZoom={maxZoom}
+			bounds={maxBounds}
 			mapData={streets || []}
 		/>
 		<h2>Ingeniero Maschwitz</h2>
