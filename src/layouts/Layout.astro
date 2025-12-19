@@ -94,6 +94,7 @@ const { title } = Astro.props;
 				max-width: 1200px;
 				margin: 0 auto;
 				padding: 0 1.5rem;
+				padding-top: 1.5rem;
 			}
 			
 			header {
@@ -391,7 +392,7 @@ const { title } = Astro.props;
 				nav a.active::before {
 					left: 10px;
 					bottom: 50%;
-					transform: translateY(50%);
+					transform: translateY(50%) translateX(-15px);
 				}
 
 				nav a {
